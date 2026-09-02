@@ -432,33 +432,50 @@
 
         <!-- Tab 2: Пасіка Зіміних -->
         <div id="tab-content-2" class="hidden h-[780px] glass-panel rounded-2xl flex flex-col overflow-hidden">
-          <div class="bg-black/40 px-4 py-3 flex items-center justify-between border-b border-white/10">
-             <div class="flex gap-2">
+          <!-- Window Header -->
+          <div class="bg-black/60 px-4 py-3 flex items-center justify-between border-b border-white/10 shrink-0">
+             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-red-500"></div>
                 <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                 <div class="w-3 h-3 rounded-full bg-green-500"></div>
              </div>
-             <div class="flex-1 max-w-md mx-4 bg-black/30 rounded-md py-1 px-3 text-xs text-slate-400 font-mono text-center flex items-center justify-center gap-2">
-               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-               https://zimin-apiary.com.ua
+             <div class="flex-1 max-w-md mx-4 bg-black/40 rounded-lg py-1.5 px-3.5 text-xs text-slate-300 font-mono text-center flex items-center justify-center gap-2 border border-white/10">
+               <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+               <span class="text-emerald-400 font-semibold">https://</span><span>zimin-apiary.com.ua</span>
              </div>
-             <div class="flex gap-2">
-               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('100%')">Desktop</button>
-               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('768px')">Tablet</button>
-               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('390px')">Mobile</button>
+             <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+               <button id="btn-vp-desktop" class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-1" onclick="setIframeWidth('desktop')">💻 100%</button>
+               <button id="btn-vp-tablet" class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1" onclick="setIframeWidth('tablet')">📟 768px</button>
+               <button id="btn-vp-mobile" class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1" onclick="setIframeWidth('mobile')">📱 390px</button>
              </div>
           </div>
-          <div class="flex-1 bg-white flex justify-center overflow-hidden">
-             <iframe id="zimin-iframe" src="https://zimin-apiary.com.ua" class="w-full h-full transition-all duration-500 border-none" style="max-width: 100%;"></iframe>
+
+          <!-- Deep Obsidian Device Stage (Eliminates white-on-white blend) -->
+          <div class="flex-1 bg-[#06080D] p-3 sm:p-6 flex items-center justify-center overflow-hidden relative" style="background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px); background-size: 20px 20px;">
+             <!-- Ambient Background Glow behind device -->
+             <div class="absolute w-[450px] h-[450px] bg-amber-500/5 rounded-full blur-[90px] pointer-events-none"></div>
+
+             <!-- Framed Device Mockup Container -->
+             <div id="zimin-frame-wrapper" class="w-full h-full max-w-full rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.15)] bg-white relative flex flex-col">
+                <!-- Device Header Tag for Mobile/Tablet -->
+                <div id="zimin-device-badge" class="hidden bg-[#181D26] px-4 py-1 text-[11px] text-slate-300 font-mono border-b border-white/10 flex items-center justify-between shrink-0">
+                  <span id="zimin-device-title" class="flex items-center gap-1.5 text-amber-400">📱 Mobile Frame (390px)</span>
+                  <span class="text-[10px] text-slate-500">Touch Simulation</span>
+                </div>
+                
+                <iframe id="zimin-iframe" src="https://zimin-apiary.com.ua" class="w-full flex-1 border-none bg-white transition-all duration-300" title="Пасіка Зіміних Live Web App" loading="lazy"></iframe>
+             </div>
           </div>
-          <div class="bg-black/40 p-3 border-t border-white/10 flex justify-between items-center text-xs text-slate-400 font-mono">
+
+          <!-- Telemetry Footer -->
+          <div class="bg-black/60 p-3 border-t border-white/10 flex justify-between items-center text-xs text-slate-400 font-mono shrink-0">
              <div class="flex gap-4">
-               <span>Astro Islands</span>
-               <span>Native &lt;dialog&gt; Cart</span>
-               <span>Honeypot Anti-Bot</span>
+               <span>● Astro Islands</span>
+               <span>● Native &lt;dialog&gt; Cart</span>
+               <span>● Honeypot Anti-Bot</span>
              </div>
-             <div class="flex items-center gap-2 text-emerald-400 font-bold bg-emerald-400/10 px-2 py-1 rounded">
-               <span>Lighthouse 100/100</span>
+             <div class="flex items-center gap-2 text-amber-400 font-bold bg-amber-400/10 px-2.5 py-1 rounded-full border border-amber-400/20">
+               <span>⚡ Lighthouse 100/100</span>
              </div>
           </div>
         </div>
@@ -681,9 +698,43 @@
       tabContent1.classList.add('hidden');
     });
 
-    // --- Zimin Iframe Switcher ---
-    function setIframeWidth(width) {
-      document.getElementById('zimin-iframe').style.maxWidth = width;
+    // --- Zimin Iframe Responsive Controller ---
+    function setIframeWidth(mode) {
+      const wrapper = document.getElementById('zimin-frame-wrapper');
+      const badge = document.getElementById('zimin-device-badge');
+      const title = document.getElementById('zimin-device-title');
+      const btnDesktop = document.getElementById('btn-vp-desktop');
+      const btnTablet = document.getElementById('btn-vp-tablet');
+      const btnMobile = document.getElementById('btn-vp-mobile');
+
+      // Reset all buttons
+      [btnDesktop, btnTablet, btnMobile].forEach(btn => {
+        btn.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1";
+      });
+
+      if (mode === 'desktop') {
+        wrapper.style.maxWidth = '100%';
+        wrapper.style.height = '100%';
+        wrapper.className = "w-full h-full max-w-full rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.15)] bg-white relative flex flex-col";
+        badge.classList.add('hidden');
+        btnDesktop.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-1";
+      } else if (mode === 'tablet') {
+        wrapper.style.maxWidth = '768px';
+        wrapper.style.height = '95%';
+        wrapper.className = "w-full max-w-[768px] h-[95%] rounded-2xl border-2 border-slate-700/80 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.98),0_0_0_1px_rgba(255,255,255,0.1)] bg-white relative flex flex-col";
+        badge.classList.remove('hidden');
+        title.textContent = "📟 iPad Mini Frame (768px Viewport)";
+        title.className = "flex items-center gap-1.5 text-cyan-400 font-semibold";
+        btnTablet.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition-all flex items-center gap-1";
+      } else if (mode === 'mobile') {
+        wrapper.style.maxWidth = '390px';
+        wrapper.style.height = '98%';
+        wrapper.className = "w-full max-w-[390px] h-[98%] rounded-[36px] border-4 border-slate-700 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_35px_80px_-15px_rgba(0,0,0,0.98),0_0_0_1px_rgba(255,255,255,0.15)] bg-white relative flex flex-col";
+        badge.classList.remove('hidden');
+        title.textContent = "📱 iPhone 14 Pro Frame (390px Viewport)";
+        title.className = "flex items-center gap-1.5 text-amber-400 font-semibold";
+        btnMobile.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30 transition-all flex items-center gap-1";
+      }
     }
 
     // --- Architecture Nodes ---
