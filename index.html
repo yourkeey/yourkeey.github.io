@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yourkeey — Senior Full-Stack & Automation Engineer</title>
+  <meta name="description" content="Розробка відмовостійких Telegram-ботів на aiogram 3, веб-CRM на FastAPI із SQLite WAL та надшвидких e-commerce магазинів на Astro. 803 smoke-тести, 100/100 Lighthouse, sub-50ms TTFB.">
+  <meta name="theme-color" content="#080B10">
+  <meta property="og:title" content="yourkeey — Senior Full-Stack & Automation Engineer">
+  <meta property="og:description" content="Telegram-боти, FastAPI CRM, Astro e-commerce. 803 тести, 100/100 Lighthouse.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            body: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            base: '#080B10',
+            surface: '#0E131B',
+            elevated: '#141C27',
+            raised: '#1C2636',
+            emerald: { 500: '#10B981', 400: '#34D399' },
+            cyan: { 500: '#06B6D4' },
+            amber: { 500: '#F59E0B' },
+            violet: { 500: '#8B5CF6' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* CSS Custom Properties & Reset */
+    :root {
+      --color-base: #080B10;
+      --color-surface: #0E131B;
+      --color-elevated: #141C27;
+      --color-raised: #1C2636;
+      --color-border: rgba(255, 255, 255, 0.07);
+      --color-border-hover: rgba(255, 255, 255, 0.15);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    body {
+      background-color: var(--color-base);
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Text wrap utilities */
+    .text-balance { text-wrap: balance; }
+    .text-pretty { text-wrap: pretty; }
+    
+    /* Backgrounds & Textures */
+    .bg-dot-grid {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .ambient-glow.cyan {
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+    }
+    
+    .ambient-glow.amber {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+    }
+
+    #cursor-spotlight {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+      background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.03), transparent 40%);
+    }
+
+    /* Glassmorphism & Components */
+    .glass-panel {
+      background: rgba(14, 19, 27, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4);
+    }
+    
+    .card-hover {
+      transition: all 0.4s var(--ease-spring);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-border-hover);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 48px rgba(0,0,0,0.5);
+    }
+
+    /* Animations */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    
+    .pulse-dot {
+      position: relative;
+    }
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 2px solid #10B981;
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-slide-up {
+      animation: slideInUp 0.6s var(--ease-spring) forwards;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--color-base); }
+    ::-webkit-scrollbar-thumb { background: var(--color-raised); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-border-hover); }
+    
+    /* Utilities */
+    .focus-ring {
+      outline: none;
+    }
+    .focus-ring:focus-visible {
+      outline: 2px solid #10B981;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="bg-dot-grid relative min-h-screen text-slate-300 selection:bg-emerald-500/30 selection:text-emerald-200">
+  
+  <div id="cursor-spotlight"></div>
+  <div class="ambient-glow top-0 left-1/4"></div>
+  <div class="ambient-glow cyan top-1/2 right-0"></div>
+  <div class="ambient-glow amber bottom-0 left-1/3"></div>
+
+  <!-- Header / Navigation -->
+  <header class="fixed top-6 w-full z-40 flex justify-center px-4">
+    <nav class="glass-panel rounded-full px-6 py-3 flex items-center gap-8 w-full max-w-5xl justify-between">
+      <div class="flex items-center gap-6">
+        <a href="#" class="focus-ring flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 p-[1px]">
+            <div class="w-full h-full bg-base rounded-full flex items-center justify-center text-sm font-display font-bold text-white group-hover:bg-transparent transition-colors">YK</div>
+          </div>
+        </a>
+        <ul class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
+          <li><a href="#interactive-stand" class="hover:text-white transition-colors focus-ring">Демо-Стенди</a></li>
+          <li><a href="#architecture" class="hover:text-white transition-colors focus-ring">Архітектура</a></li>
+          <li><a href="#cases" class="hover:text-white transition-colors focus-ring">Кейси</a></li>
+          <li><a href="#services" class="hover:text-white transition-colors focus-ring">Послуги</a></li>
+        </ul>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></div>
+          Open for hire
+        </div>
+        <a href="https://github.com/yourkeey" target="_blank" class="text-slate-400 hover:text-white transition-colors focus-ring">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+        </a>
+        <a href="https://t.me/yourkeey" target="_blank" class="btn-shimmer bg-white text-base px-4 py-2 rounded-full font-medium text-sm hover:bg-slate-200 transition-colors focus-ring flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.2 3.45-.49.34-.94.5-1.35.49-.45-.01-1.31-.25-1.95-.46-.79-.26-1.41-.4-1.35-.85.03-.23.34-.47.93-.72 3.65-1.59 6.09-2.64 7.32-3.15 3.49-1.45 4.22-1.7 4.69-1.71.1 0 .34.02.47.12.11.08.14.2.16.29.02.13.02.29.01.4z"/></svg>
+          Telegram
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="pt-40 pb-20 px-4 flex flex-col items-center text-center">
+      <div class="glass-panel px-4 py-1.5 rounded-full border-emerald-500/30 bg-emerald-500/5 text-emerald-400 font-mono text-xs mb-8 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        803 Smoke-тести (0 failed) · SQLite WAL · Sub-50ms TTFB
+      </div>
+      
+      <h1 class="font-display text-5xl md:text-7xl font-bold tracking-tight text-balance max-w-4xl leading-[1.1] mb-6">
+        Інженерія надійних ботів, <br/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-400">веб-CRM та систем</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-slate-400 text-pretty max-w-2xl mb-10">
+        Спеціалізуюсь на створенні надшвидких рішень за допомогою aiogram 3, FastAPI, SQLite WAL та Astro. Від автоматизації до e-commerce.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row items-center gap-4 mb-20">
+        <a href="#interactive-stand" class="btn-shimmer bg-emerald-500 hover:bg-emerald-600 text-base font-medium px-6 py-3 rounded-xl transition-colors focus-ring text-white">
+          Спробувати Live Digital Twin
+        </a>
+        <a href="https://t.me/yourkeey" target="_blank" class="glass-panel text-white hover:bg-white/5 font-medium px-6 py-3 rounded-xl transition-colors focus-ring">
+          Обговорити проєкт
+        </a>
+      </div>
+
+      <!-- Metric Bento Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
+        <div class="glass-panel rounded-2xl p-5 text-left card-hover">
+          <div class="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Test Coverage</div>
+          <div class="text-2xl font-bold font-display text-emerald-400">803 / 803</div>
+          <div class="text-sm text-slate-500 mt-1">Passing tests</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-5 text-left card-hover">
+          <div class="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Database</div>
+          <div class="text-2xl font-bold font-display text-amber-400">SQLite WAL</div>
+          <div class="text-sm text-slate-500 mt-1">High-concurrency</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-5 text-left card-hover">
+          <div class="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Performance</div>
+          <div class="text-2xl font-bold font-display text-cyan-400">100 / 100</div>
+          <div class="text-sm text-slate-500 mt-1">Lighthouse Score</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-5 text-left card-hover">
+          <div class="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Latency</div>
+          <div class="text-2xl font-bold font-display text-violet-400">&lt;50ms</div>
+          <div class="text-sm text-slate-500 mt-1">TTFB Speed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Digital Twin Stand -->
+    <section id="interactive-stand" class="py-24 px-4 scroll-mt-24">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Live Digital Twin Стенд</h2>
+          <p class="text-slate-400">Інтерактивна симуляція роботи систем в реальному часі.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex justify-center mb-8">
+          <div class="glass-panel p-1 rounded-xl inline-flex">
+            <button id="tab-btn-1" class="px-6 py-2 rounded-lg text-sm font-medium bg-white/10 text-white transition-all shadow-sm">N1kotea (Bot + CRM)</button>
+            <button id="tab-btn-2" class="px-6 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Пасіка Зіміних (Astro)</button>
+          </div>
+        </div>
+
+        <!-- Tab 1: N1kotea -->
+        <div id="tab-content-1" class="grid lg:grid-cols-[380px_1fr] gap-8">
+          
+          <!-- Mobile Mockup -->
+          <div class="relative mx-auto w-full max-w-[380px] h-[780px] bg-black rounded-[50px] border-[8px] border-slate-800 shadow-2xl overflow-hidden flex flex-col">
+            <!-- iOS Status Bar -->
+            <div class="absolute top-0 w-full h-12 flex justify-between items-center px-6 z-20 text-white text-xs font-semibold">
+              <span id="ios-clock">09:41</span>
+              <div class="flex gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h20V2z"/></svg>
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+              </div>
+            </div>
+            <!-- Dynamic Island -->
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-[120px] h-[30px] bg-black rounded-full z-30"></div>
+
+            <!-- Telegram Header -->
+            <div class="bg-[#212121] pt-14 pb-2 px-4 flex items-center gap-3 border-b border-white/10 relative z-10 shadow-md">
+              <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-xl">🍵</div>
+              <div class="flex-1">
+                <div class="font-semibold flex items-center gap-1">N1kotea | Чайний Бот <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg></div>
+                <div class="text-xs text-emerald-400">bot</div>
+              </div>
+            </div>
+
+            <!-- Chat Feed -->
+            <div class="flex-1 bg-[#0f0f0f] p-4 overflow-y-auto flex flex-col gap-4 relative" id="chat-feed" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.02\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');">
+              <div class="bg-[#212121] text-white p-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm self-start shadow-sm border border-white/5 animate-slide-up">
+                Вітаємо! Оберіть чай з нашого каталогу:
+              </div>
+              
+              <!-- Product 1 -->
+              <div class="bg-[#212121] rounded-xl overflow-hidden max-w-[85%] self-start border border-white/5 animate-slide-up" style="animation-delay: 0.1s">
+                <div class="h-32 bg-slate-800 flex items-center justify-center text-4xl">🫖</div>
+                <div class="p-3">
+                  <div class="font-semibold text-sm">Шу Пуер «Гу Тін» 2018</div>
+                  <div class="text-xs text-slate-400 mt-1">357г · Юньнань</div>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="font-bold text-emerald-400">950 ₴</span>
+                    <button class="bg-[#8774e1] text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-[#7262c5] transition-colors focus-ring" onclick="addToCart('Шу Пуер', 950)">Додати</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 2 -->
+              <div class="bg-[#212121] rounded-xl overflow-hidden max-w-[85%] self-start border border-white/5 animate-slide-up" style="animation-delay: 0.2s">
+                <div class="h-32 bg-slate-800 flex items-center justify-center text-4xl">⛰️</div>
+                <div class="p-3">
+                  <div class="font-semibold text-sm">Да Хун Пао «Великий Червоний»</div>
+                  <div class="text-xs text-slate-400 mt-1">50г · Скельний улун</div>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="font-bold text-emerald-400">420 ₴</span>
+                    <button class="bg-[#8774e1] text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-[#7262c5] transition-colors focus-ring" onclick="addToCart('Да Хун Пао', 420)">Додати</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Keyboard & Input Area -->
+            <div class="bg-[#212121] border-t border-white/10 flex flex-col p-2 gap-2">
+              <div id="checkout-btn" class="hidden w-full bg-[#333] hover:bg-[#444] text-white rounded-xl py-3 text-center text-sm font-medium cursor-pointer transition-colors" onclick="checkout()">
+                🛒 Оформити замовлення
+              </div>
+              <div class="flex items-center gap-3 px-2 py-2">
+                <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                <div class="flex-1 text-slate-500 text-sm">Message</div>
+                <svg class="w-6 h-6 text-[#8774e1]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-7c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"/></svg>
+              </div>
+            </div>
+            <!-- Home Indicator -->
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/50 rounded-full"></div>
+          </div>
+
+          <!-- CRM Mockup -->
+          <div class="glass-panel rounded-2xl border-white/10 overflow-hidden flex flex-col h-[780px]">
+            <!-- Window Chrome -->
+            <div class="bg-black/40 px-4 py-3 flex items-center gap-4 border-b border-white/10">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div class="flex-1 bg-black/30 rounded-md py-1 px-3 text-xs text-slate-400 font-mono text-center truncate">
+                admin.n1kotea.internal:8111/admin/orders
+              </div>
+              <div class="text-[10px] font-mono bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30">SQLite WAL</div>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col gap-6 bg-[#0E131B]/80 overflow-y-auto">
+              <!-- CRM Metrics -->
+              <div class="grid grid-cols-3 gap-4">
+                <div class="bg-black/20 border border-white/5 rounded-xl p-4">
+                  <div class="text-xs text-slate-400 mb-1">Orders</div>
+                  <div class="text-2xl font-bold font-mono text-white" id="crm-orders">14</div>
+                </div>
+                <div class="bg-black/20 border border-white/5 rounded-xl p-4">
+                  <div class="text-xs text-slate-400 mb-1">Revenue</div>
+                  <div class="text-2xl font-bold font-mono text-emerald-400" id="crm-rev">12,450 ₴</div>
+                </div>
+                <div class="bg-black/20 border border-white/5 rounded-xl p-4">
+                  <div class="text-xs text-slate-400 mb-1">Queue</div>
+                  <div class="text-2xl font-bold font-mono text-amber-400" id="crm-queue">2</div>
+                </div>
+              </div>
+
+              <!-- Orders Table -->
+              <div class="bg-black/20 border border-white/5 rounded-xl flex-1 flex flex-col">
+                <div class="px-4 py-3 border-b border-white/5 font-medium text-sm">Recent Orders</div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-slate-500 uppercase bg-black/40">
+                      <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Client</th>
+                        <th class="px-4 py-3">Item</th>
+                        <th class="px-4 py-3">Total</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="crm-table-body" class="divide-y divide-white/5">
+                      <tr>
+                        <td class="px-4 py-3 font-mono text-slate-300">#1041</td>
+                        <td class="px-4 py-3">Тарас Мельник</td>
+                        <td class="px-4 py-3 text-slate-400">Да Хун Пао</td>
+                        <td class="px-4 py-3 font-mono">420 ₴</td>
+                        <td class="px-4 py-3"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs">Відправлено</span></td>
+                        <td class="px-4 py-3">--</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Event Log -->
+              <div class="h-32 bg-black rounded-xl border border-white/10 p-3 font-mono text-[10px] text-slate-400 overflow-y-auto flex flex-col gap-1" id="event-log">
+                <div>[SYSTEM] CRM Initialized. Connection: SQLite WAL.</div>
+                <div>[SYSTEM] Listening for webhook events...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Пасіка Зіміних -->
+        <div id="tab-content-2" class="hidden h-[780px] glass-panel rounded-2xl flex flex-col overflow-hidden">
+          <div class="bg-black/40 px-4 py-3 flex items-center justify-between border-b border-white/10">
+             <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+             </div>
+             <div class="flex-1 max-w-md mx-4 bg-black/30 rounded-md py-1 px-3 text-xs text-slate-400 font-mono text-center flex items-center justify-center gap-2">
+               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+               https://zimin-apiary.com.ua
+             </div>
+             <div class="flex gap-2">
+               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('100%')">Desktop</button>
+               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('768px')">Tablet</button>
+               <button class="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20 transition" onclick="setIframeWidth('390px')">Mobile</button>
+             </div>
+          </div>
+          <div class="flex-1 bg-white flex justify-center overflow-hidden">
+             <iframe id="zimin-iframe" src="https://zimin-apiary.com.ua" class="w-full h-full transition-all duration-500 border-none" style="max-width: 100%;"></iframe>
+          </div>
+          <div class="bg-black/40 p-3 border-t border-white/10 flex justify-between items-center text-xs text-slate-400 font-mono">
+             <div class="flex gap-4">
+               <span>Astro Islands</span>
+               <span>Native &lt;dialog&gt; Cart</span>
+               <span>Honeypot Anti-Bot</span>
+             </div>
+             <div class="flex items-center gap-2 text-emerald-400 font-bold bg-emerald-400/10 px-2 py-1 rounded">
+               <span>Lighthouse 100/100</span>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Architecture Blueprint -->
+    <section id="architecture" class="py-24 px-4 bg-black/30 border-y border-white/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-12">
+          <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Архітектура Рішень</h2>
+          <p class="text-slate-400">Модульний підхід до побудови надійних систем.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+          <!-- Nodes -->
+          <div class="glass-panel p-6 rounded-2xl cursor-pointer hover:bg-white/5 transition-colors border-emerald-500/20" onclick="showArchDetails(1)">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">1</div>
+              <div class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-slate-400">aiogram 3.x</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Telegram Webhook FSM</h3>
+            <p class="text-sm text-slate-400">Машина станів для обробки діалогів, webhook-інтеграція для мінімізації затримок.</p>
+          </div>
+
+          <div class="glass-panel p-6 rounded-2xl cursor-pointer hover:bg-white/5 transition-colors border-cyan-500/20" onclick="showArchDetails(2)">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">2</div>
+              <div class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-slate-400">FastAPI</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Event Engine & CRM</h3>
+            <p class="text-sm text-slate-400">Асинхронне ядро для обробки замовлень, генерації ТТН та управління клієнтською базою.</p>
+          </div>
+
+          <div class="glass-panel p-6 rounded-2xl cursor-pointer hover:bg-white/5 transition-colors border-amber-500/20" onclick="showArchDetails(3)">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">3</div>
+              <div class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-slate-400">SQLite WAL</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">High-Speed Concurrency</h3>
+            <p class="text-sm text-slate-400">Оптимізована база даних у режимі Write-Ahead Logging. 1000+ RPS без блокувань.</p>
+          </div>
+
+          <div class="glass-panel p-6 rounded-2xl cursor-pointer hover:bg-white/5 transition-colors border-violet-500/20" onclick="showArchDetails(4)">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center font-bold">4</div>
+              <div class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-slate-400">Astro SSG</div>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Sub-50ms Web Store</h3>
+            <p class="text-sm text-slate-400">Генерація статики з частковою гідратацією (Islands) для максимальної швидкості.</p>
+          </div>
+        </div>
+
+        <!-- Detail Box -->
+        <div class="glass-panel p-6 rounded-2xl min-h-[120px] flex items-center border-white/10" id="arch-detail">
+          <div class="text-slate-400 text-sm">Клікніть на компонент архітектури для перегляду деталей.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terminal Bench -->
+    <section id="terminal-bench" class="py-24 px-4">
+      <div class="max-w-4xl mx-auto glass-panel rounded-2xl overflow-hidden border-slate-700 shadow-2xl">
+        <div class="bg-black/60 px-4 py-3 flex items-center justify-between border-b border-slate-700">
+           <div class="text-xs text-slate-400 font-mono">user@devbox: ~/projects/portfolio</div>
+           <div class="flex gap-2">
+             <button class="px-3 py-1 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 rounded text-xs font-mono transition" onclick="runPytest()">▶ pytest</button>
+             <button class="px-3 py-1 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 rounded text-xs font-mono transition" onclick="runStress()">⚡ 1000 RPS Stress</button>
+           </div>
+        </div>
+        <div class="p-6 bg-[#0c0c0c] font-mono text-sm h-80 overflow-y-auto" id="term-output">
+          <div class="text-emerald-400 mb-2">System ready. Select a benchmark to run.</div>
+          <div class="flex items-center text-slate-300">
+            <span class="mr-2">$</span> <span class="cursor-blink w-2 h-4 bg-slate-300 inline-block"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cases -->
+    <section id="cases" class="py-24 px-4 bg-black/30 border-t border-white/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-12 text-center">
+          <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Кейси з production</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Case 1 -->
+          <article class="glass-panel rounded-3xl p-8 card-hover flex flex-col">
+            <h3 class="text-2xl font-bold mb-2">N1kotea</h3>
+            <p class="text-slate-400 text-sm mb-6">Telegram Bot + FastAPI CRM для чайного магазину.</p>
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">aiogram 3</span>
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">FastAPI</span>
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">SQLite</span>
+            </div>
+            <ul class="space-y-3 text-sm text-slate-300 flex-1 mb-8">
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Автоматизація продажів</li>
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Інтеграція Нової Пошти (авто-ТТН)</li>
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Кастомна адмін-панель</li>
+            </ul>
+          </article>
+
+          <!-- Case 2 -->
+          <article class="glass-panel rounded-3xl p-8 card-hover flex flex-col">
+            <h3 class="text-2xl font-bold mb-2">Пасіка Зіміних</h3>
+            <p class="text-slate-400 text-sm mb-6">Надшвидкий Astro SSG e-commerce для пасіки.</p>
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">Astro</span>
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">Tailwind</span>
+              <span class="px-2 py-1 bg-white/5 rounded text-xs font-mono text-slate-300">Native API</span>
+            </div>
+            <ul class="space-y-3 text-sm text-slate-300 flex-1 mb-8">
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 100/100 Lighthouse Performance</li>
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Відсутність JS-фреймворків (vanilla)</li>
+              <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Захист від ботів Honeypot</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-24 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-16 text-center">
+          <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Послуги</h2>
+          <p class="text-slate-400">Прогнозований результат. Фіксовані терміни.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Tier 1 -->
+          <div class="glass-panel p-8 rounded-3xl flex flex-col">
+            <div class="text-3xl mb-4">🤖</div>
+            <h3 class="text-xl font-bold mb-2">Telegram-Бот + CRM <br/>«Під Ключ»</h3>
+            <div class="text-emerald-400 text-sm font-mono mb-6">⏱ 5-7 днів</div>
+            <p class="text-slate-400 text-sm flex-1 mb-8">Повна автоматизація продажів, інтеграція платіжних систем та служб доставки.</p>
+            <a href="https://t.me/yourkeey?text=Привіт!%20Цікавить%20розробка%20Telegram-бота" target="_blank" class="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-center font-medium transition-colors">Замовити</a>
+          </div>
+
+          <!-- Tier 2 -->
+          <div class="glass-panel p-8 rounded-3xl flex flex-col relative border-emerald-500/30 transform md:-translate-y-4 shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Популярне</div>
+            <div class="text-3xl mb-4">⚡</div>
+            <h3 class="text-xl font-bold mb-2">Швидкісний E-commerce & Landing</h3>
+            <div class="text-emerald-400 text-sm font-mono mb-6">⏱ 4-6 днів</div>
+            <p class="text-slate-400 text-sm flex-1 mb-8">Створення сайтів на Astro з оцінкою Lighthouse 100/100. Максимальна конверсія.</p>
+            <a href="https://t.me/yourkeey?text=Привіт!%20Цікавить%20швидкісний%20сайт%20на%20Astro" target="_blank" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-center font-medium transition-colors btn-shimmer">Замовити</a>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="glass-panel p-8 rounded-3xl flex flex-col">
+            <div class="text-3xl mb-4">🛡️</div>
+            <h3 class="text-xl font-bold mb-2">Аудит, Рефакторинг & Оптимізація</h3>
+            <div class="text-emerald-400 text-sm font-mono mb-6">⏱ 2-3 днів</div>
+            <p class="text-slate-400 text-sm flex-1 mb-8">Оптимізація бази даних, прискорення завантаження, виправлення архітектурних помилок.</p>
+            <a href="https://t.me/yourkeey?text=Привіт!%20Потрібен%20аудит%20та%20оптимізація%20проєкту" target="_blank" class="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-center font-medium transition-colors">Замовити</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 border-t border-white/10 bg-black/50 text-center">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col items-center">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 p-[1px] mb-6">
+        <div class="w-full h-full bg-base rounded-full flex items-center justify-center text-sm font-display font-bold text-white">YK</div>
+      </div>
+      <h2 class="text-2xl font-bold mb-6">Готові запустити надійну систему?</h2>
+      <div class="flex gap-4 mb-12">
+        <a href="https://t.me/yourkeey" target="_blank" class="bg-white text-black px-6 py-2.5 rounded-full font-medium text-sm hover:bg-slate-200 transition-colors focus-ring">Написати в Telegram</a>
+        <a href="https://github.com/yourkeey" target="_blank" class="glass-panel px-6 py-2.5 rounded-full font-medium text-sm hover:bg-white/5 transition-colors focus-ring">GitHub</a>
+      </div>
+      <div class="text-slate-500 text-sm">
+        © 2026 yourkeey. Engineered with precision & craft.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Cursor Spotlight ---
+    const spotlight = document.getElementById('cursor-spotlight');
+    document.addEventListener('mousemove', (e) => {
+      spotlight.style.setProperty('--x', `${e.clientX}px`);
+      spotlight.style.setProperty('--y', `${e.clientY}px`);
+    });
+
+    // --- Live Clock ---
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours().toString().padStart(2, '0');
+      let mins = now.getMinutes().toString().padStart(2, '0');
+      document.getElementById('ios-clock').textContent = `${hours}:${mins}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // --- Interactive Stand Tabs ---
+    const tabBtn1 = document.getElementById('tab-btn-1');
+    const tabBtn2 = document.getElementById('tab-btn-2');
+    const tabContent1 = document.getElementById('tab-content-1');
+    const tabContent2 = document.getElementById('tab-content-2');
+
+    tabBtn1.addEventListener('click', () => {
+      tabBtn1.classList.replace('text-slate-400', 'text-white');
+      tabBtn1.classList.add('bg-white/10', 'shadow-sm');
+      tabBtn2.classList.remove('bg-white/10', 'shadow-sm');
+      tabBtn2.classList.replace('text-white', 'text-slate-400');
+      tabContent1.classList.remove('hidden');
+      tabContent2.classList.add('hidden');
+    });
+
+    tabBtn2.addEventListener('click', () => {
+      tabBtn2.classList.replace('text-slate-400', 'text-white');
+      tabBtn2.classList.add('bg-white/10', 'shadow-sm');
+      tabBtn1.classList.remove('bg-white/10', 'shadow-sm');
+      tabBtn1.classList.replace('text-white', 'text-slate-400');
+      tabContent2.classList.remove('hidden');
+      tabContent1.classList.add('hidden');
+    });
+
+    // --- Zimin Iframe Switcher ---
+    function setIframeWidth(width) {
+      document.getElementById('zimin-iframe').style.maxWidth = width;
+    }
+
+    // --- Architecture Nodes ---
+    const archDetails = {
+      1: "<strong class='text-emerald-400'>Telegram Webhook FSM:</strong> Забезпечує миттєву реакцію бота на дії користувача. Використання Webhook замість Polling знижує навантаження, а FSM дозволяє будувати складні багатокрокові діалоги без плутанини у станах.",
+      2: "<strong class='text-cyan-400'>Event Engine & CRM:</strong> Написано на FastAPI для асинхронної обробки HTTP запитів. Відповідає за валідацію даних, взаємодію з API Нової Пошти для генерації ТТН та надання REST API для фронтенд-адмінки.",
+      3: "<strong class='text-amber-400'>SQLite WAL (Write-Ahead Logging):</strong> Дозволяє одночасне читання та запис, що критично для систем з високою конкурентністю. Забезпечує продуктивність на рівні з PostgreSQL для більшості задач, але без оверхеду на адміністрування.",
+      4: "<strong class='text-violet-400'>Astro SSG:</strong> Генерація статичного HTML під час білда з використанням концепції Islands Architecture. JavaScript завантажується лише для інтерактивних компонентів (наприклад, кошика), що забезпечує TTFB < 50ms та 100/100 Lighthouse."
+    };
+    function showArchDetails(id) {
+      const el = document.getElementById('arch-detail');
+      el.innerHTML = `<div class="animate-slide-up text-slate-300 text-sm leading-relaxed">${archDetails[id]}</div>`;
+    }
+
+    // --- Terminal Bench ---
+    const termOutput = document.getElementById('term-output');
+    function logToTerm(text, delay, color = 'text-slate-300') {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = color + ' mb-1';
+          div.textContent = text;
+          // Insert before the cursor
+          termOutput.insertBefore(div, termOutput.lastElementChild);
+          termOutput.scrollTop = termOutput.scrollHeight;
+          resolve();
+        }, delay);
+      });
+    }
+
+    async function runPytest() {
+      termOutput.innerHTML = '<div class="flex items-center text-slate-300"><span class="mr-2">$</span> <span class="cursor-blink w-2 h-4 bg-slate-300 inline-block"></span></div>';
+      await logToTerm('$ pytest tests/ --numprocesses=auto', 100);
+      await logToTerm('============================= test session starts =============================', 400);
+      await logToTerm('platform linux -- Python 3.11.4, pytest-7.4.0', 500);
+      await logToTerm('rootdir: /projects/portfolio', 550);
+      await logToTerm('plugins: asyncio-0.21.1, xdist-3.3.1', 600);
+      await logToTerm('collected 803 items', 1000);
+      await logToTerm('tests/test_fsm.py .................................... [  4%]', 1200, 'text-emerald-400');
+      await logToTerm('tests/test_api.py .................................................... [ 11%]', 1400, 'text-emerald-400');
+      await logToTerm('tests/test_db.py ..................................................................... [ 20%]', 1600, 'text-emerald-400');
+      await logToTerm('... running tests ...', 1800, 'text-slate-500');
+      await logToTerm('tests/test_integration.py ............................ [100%]', 2400, 'text-emerald-400');
+      await logToTerm('======================== 803 passed in 1.42s ========================', 2500, 'text-emerald-400 font-bold');
+    }
+
+    async function runStress() {
+      termOutput.innerHTML = '<div class="flex items-center text-slate-300"><span class="mr-2">$</span> <span class="cursor-blink w-2 h-4 bg-slate-300 inline-block"></span></div>';
+      await logToTerm('$ k6 run stress.js -u 1000 -d 10s', 100);
+      await logToTerm('          /\\      |‾‾| /‾‾/   /‾‾/', 300, 'text-cyan-400 font-bold');
+      await logToTerm('     /\\  /  \\     |  |/  /   /  /', 350, 'text-cyan-400 font-bold');
+      await logToTerm('    /  \\/    \\    |     (   /   ‾‾\\', 400, 'text-cyan-400 font-bold');
+      await logToTerm('   /          \\   |  |\\  \\ |  (‾)  |', 450, 'text-cyan-400 font-bold');
+      await logToTerm('  / __________ \\  |__| \\__\\ \\_____/ .io', 500, 'text-cyan-400 font-bold');
+      await logToTerm('  execution: local', 600);
+      await logToTerm('     script: stress.js', 650);
+      await logToTerm('     output: -', 700);
+      await logToTerm('  scenarios: (100.00%) 1 scenario, 1000 max VUs, 40s max duration (incl. graceful stop)', 800);
+      await logToTerm('running (10.0s), 1000/1000 VUs, 24500 complete and 0 interrupted iterations', 2500);
+      await logToTerm('✓ status is 200', 2600, 'text-emerald-400');
+      await logToTerm('✓ transaction time OK', 2650, 'text-emerald-400');
+      await logToTerm('  http_req_duration..............: avg=18.4ms min=2.1ms med=15ms max=89ms p(90)=28ms p(95)=34ms p(99)=49ms', 2800, 'text-amber-400');
+      await logToTerm('  http_req_failed................: 0.00% ✓ 0 ✗ 24500', 2900, 'text-emerald-400');
+      await logToTerm('  iterations.....................: 24500  2450/s', 3000);
+    }
+
+    // --- N1kotea Interactive Flow ---
+    let cart = [];
+    let orderCounter = 1041;
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const chatFeed = document.getElementById('chat-feed');
+    const crmLog = document.getElementById('event-log');
+    
+    function logCrm(msg) {
+      const d = document.createElement('div');
+      d.textContent = `[SYSTEM] ${msg}`;
+      crmLog.appendChild(d);
+      crmLog.scrollTop = crmLog.scrollHeight;
+    }
+
+    function addToCart(item, price) {
+      cart.push({item, price});
+      checkoutBtn.classList.remove('hidden');
+      checkoutBtn.innerHTML = `🛒 Оформити замовлення (${cart.length} шт, ${cart.reduce((a,b)=>a+b.price,0)} ₴)`;
+      
+      const bubble = document.createElement('div');
+      bubble.className = "bg-[#212121] text-white p-2 px-3 rounded-2xl rounded-tl-none text-xs self-start shadow-sm border border-emerald-500/30 text-emerald-400 animate-slide-up";
+      bubble.textContent = `✅ ${item} додано до кошика!`;
+      chatFeed.appendChild(bubble);
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+      
+      logCrm(`User action: AddToCart (${item})`);
+    }
+
+    function checkout() {
+      if(cart.length === 0) return;
+      checkoutBtn.classList.add('hidden');
+      
+      const total = cart.reduce((a,b)=>a+b.price,0);
+      const itemsStr = cart.map(c=>c.item).join(', ');
+      
+      // User message
+      const userBubble = document.createElement('div');
+      userBubble.className = "bg-[#8774e1] text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-sm self-end shadow-sm animate-slide-up";
+      userBubble.textContent = "Оформити замовлення";
+      chatFeed.appendChild(userBubble);
+      
+      setTimeout(() => {
+        // Bot reply
+        const botBubble = document.createElement('div');
+        botBubble.className = "bg-[#212121] text-white p-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm self-start shadow-sm border border-white/5 animate-slide-up";
+        botBubble.innerHTML = `🎉 Замовлення прийнято!<br><br><b>Сума:</b> ${total} ₴<br><b>Товари:</b> ${itemsStr}<br><br>Очікуйте номер ТТН.`;
+        chatFeed.appendChild(botBubble);
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+        
+        // Update CRM
+        orderCounter++;
+        const tBody = document.getElementById('crm-table-body');
+        const tr = document.createElement('tr');
+        tr.className = "bg-emerald-900/20";
+        tr.innerHTML = `
+          <td class="px-4 py-3 font-mono text-emerald-400">#${orderCounter}</td>
+          <td class="px-4 py-3 text-white">Гість</td>
+          <td class="px-4 py-3 text-slate-300 truncate max-w-[120px]">${itemsStr}</td>
+          <td class="px-4 py-3 font-mono text-emerald-400">${total} ₴</td>
+          <td class="px-4 py-3" id="status-${orderCounter}"><span class="bg-amber-500/20 text-amber-400 px-2 py-1 rounded text-xs">Нове</span></td>
+          <td class="px-4 py-3"><button onclick="sendTTN(${orderCounter})" class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded hover:bg-emerald-500/40 transition">Відправити ТТН</button></td>
+        `;
+        tBody.prepend(tr);
+        
+        // Update metrics
+        let ordCnt = parseInt(document.getElementById('crm-orders').textContent) + 1;
+        document.getElementById('crm-orders').textContent = ordCnt;
+        
+        let curRev = parseInt(document.getElementById('crm-rev').textContent.replace(/\D/g,''));
+        document.getElementById('crm-rev').textContent = (curRev + total).toLocaleString('uk-UA') + ' ₴';
+        
+        let qCnt = parseInt(document.getElementById('crm-queue').textContent) + 1;
+        document.getElementById('crm-queue').textContent = qCnt;
+        
+        logCrm(`OrderCreated: #${orderCounter} total=${total}`);
+        cart = []; // clear cart
+      }, 600);
+    }
+
+    function sendTTN(id) {
+      // update status in crm
+      document.getElementById(`status-${id}`).innerHTML = `<span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs">Відправлено</span>`;
+      let qCnt = parseInt(document.getElementById('crm-queue').textContent) - 1;
+      document.getElementById('crm-queue').textContent = Math.max(0, qCnt);
+      logCrm(`Action: GenerateTTN for #${id}`);
+      
+      setTimeout(() => {
+        const ttn = "2045" + Math.floor(Math.random() * 10000000000);
+        logCrm(`NovaPoshta API: TTN ${ttn} generated`);
+        
+        // push to telegram
+        setTimeout(() => {
+          const botBubble = document.createElement('div');
+          botBubble.className = "bg-[#212121] text-white p-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm self-start shadow-sm border border-emerald-500/30 animate-slide-up";
+          botBubble.innerHTML = `📦 <b>Ваше замовлення відправлено!</b><br><br>ТТН: <code class="bg-black/50 px-1 rounded text-emerald-400">${ttn}</code>`;
+          chatFeed.appendChild(botBubble);
+          chatFeed.scrollTop = chatFeed.scrollHeight;
+          logCrm(`Webhook: Push Notification sent for #${id}`);
+        }, 500);
+      }, 400);
+    }
+  </script>
+</body>
+</html>
