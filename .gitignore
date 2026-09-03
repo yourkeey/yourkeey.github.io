@@ -1,3 +1,6 @@
 
 *.docx
 
+
+.profile_repo/
+
