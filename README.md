@@ -1,28 +1,37 @@
 # Yurii Fomenko — Web Developer
 
-Websites, lightweight CRM tools, Telegram bots and Mini Apps. Open to remote junior roles and contract work.
+Telegram bots, Mini Apps, CRMs and online stores for small businesses. Open to remote roles and contract work.
 
-- [Portfolio](https://yourkeey.github.io/)
+- [Portfolio (English)](https://yourkeey.github.io/) · [Українською](https://yourkeey.github.io/uk/)
 - [English CV](cv.html)
 - [Contact](https://t.me/yourkeey)
 
 ## Project experience
 
-**TEA BET — Telegram shop, CRM and Mini App.** Paid project for a tea shop owner. A React/TypeScript Mini App storefront opened from the bot was published in October 2026, with server-side Telegram initData verification and transactional checkout. Python, aiogram 3, FastAPI, SQLAdmin, SQLite, React, TypeScript and Vite; catalogue, cart, orders, stock, notifications and delivery-status tracking for manually entered waybill numbers.
+**TEA BET (n1kotea) — Telegram shop, CRM and Mini App.** Paid project for a tea shop owner. A React/TypeScript Mini App storefront opened from the bot was published in October 2026, with server-side Telegram initData verification and transactional checkout. Python, aiogram 3, FastAPI, SQLAdmin, SQLite, React, TypeScript and Vite; catalogue, cart, orders, stock, notifications and delivery-status tracking for manually entered waybill numbers.
 
-**Zimin Apiary — honey storefront.** Published prototype based on the owner's Instagram shop; not yet processing real orders. Astro, TypeScript and CSS, with a Cloudflare order endpoint that validates the cart and sends order details to Telegram.
+**Zimin Apiary — honey storefront.** Live store based on the owner's Instagram shop, accepting customer orders. Astro, TypeScript and CSS, with a Cloudflare order endpoint that validates the cart and sends order details to Telegram.
 
-AI coding agents are central to my implementation workflow. Technologies listed here describe the projects; they are not claims of senior-level expertise.
+AI coding agents are central to my implementation workflow.
 
-## Evidence and demonstration
+## The live demo on the home page
 
-- The tea shop screenshots use synthetic data.
-- The browser simulator runs locally in the page and does not connect to Telegram, the CRM or Nova Poshta.
-- [Verification notes](verification.html) identify the scope and date of the local test run. They are not a public CI badge or a production-reliability guarantee.
-- The tea project's source URL was not publicly accessible during the 6 October 2026 review; no public-code access is promised.
+- **Mini App** (`demo/miniapp/`): the production n1kotea Mini App, built from the private Tea_bot repository with its API swapped for an in-browser one (`miniapp/demo/` and `vite.demo.config.ts` there). The catalogue, club articles and quotes are a snapshot of the shop's public Mini App API; product photos load from the shop's server.
+- **Admin** (`demo/crm.js`): the manager's side, rebuilt in the browser from the production admin's statuses and steps. Nova Poshta tracking is simulated.
+- Both share one state in `localStorage` (`teabet-demo/v1`) and `BroadcastChannel` (`teabet-demo`). Demo orders, carts and stock never leave the visitor's browser and never reach the real shop.
 
-## Resume and privacy
+Refresh the catalogue snapshot and the bundle, from `Tea_bot/miniapp`:
 
-The public CV page at `cv.html` shows the professional name and email but omits the phone number. The PDF stays local and includes a phone number for direct applications. Review the public contact details before publishing.
+```bash
+node demo/make-seed.mjs && DEMO_OUT=../../portfolio/demo/miniapp npx vite build -c vite.demo.config.ts
+```
 
-`portfolio.html` and `index.html` contain the same page. `index.html` is the GitHub Pages entry point. Review the files intended for release before publishing; local notes and resume sources are excluded by `.gitignore`.
+## Building the pages
+
+`index.html` and `uk/index.html` are generated from `src/strings.mjs` (all copy, both languages) and `src/build.mjs` (the template). Edit those, then run `node src/build.mjs` and commit the generated pages. Styles: `assets/css/site.css` on top of `tokens.css` and `base.css`.
+
+## Evidence and privacy
+
+- The admin screenshot of the tea shop uses synthetic data; the demo's sample orders and customers are invented.
+- [Verification notes](verification.html) give the scope and date of a local test run. They are not a public CI badge.
+- The public CV page omits the phone number. Resume PDFs stay local (`resume/` is ignored).

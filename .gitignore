@@ -8,9 +8,11 @@
 /Поиск работы/
 /tmp/
 /.edge_temp/
-/resume/candidate-v2.json
-/resume/Yurii_Fomenko_CV_v2.html
-/resume/Yurii_Fomenko_CV_v2.md
-/resume/Yurii_Fomenko_CV_v2.pdf
+# Every resume PDF includes the phone number: the whole folder stays local.
+/resume/
 /cv-v2.html
 
+
+# Local agent tooling: design skills, preview config, Hallmark build log.
+/.claude/
+/.hallmark/

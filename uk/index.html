@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Юрій Фоменко, Telegram-магазини, адмінки та сайти</title>
+  <meta name="description" content="Розробник Telegram-ботів, Mini Apps, CRM та інтернет-магазинів для малого бізнесу. На цій сторінці можна спробувати справжній Telegram-магазин і його адмінку.">
+  <link rel="canonical" href="https://yourkeey.github.io/uk/">
+  <link rel="alternate" hreflang="en" href="https://yourkeey.github.io/">
+  <link rel="alternate" hreflang="uk" href="https://yourkeey.github.io/uk/">
+  <link rel="alternate" hreflang="x-default" href="https://yourkeey.github.io/">
+  <meta property="og:title" content="Юрій Фоменко, Telegram-магазини, адмінки та сайти">
+  <meta property="og:description" content="Розробник Telegram-ботів, Mini Apps, CRM та інтернет-магазинів для малого бізнесу. На цій сторінці можна спробувати справжній Telegram-магазин і його адмінку.">
+  <meta property="og:url" content="https://yourkeey.github.io/uk/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://yourkeey.github.io/assets/projects/zimin-home.webp">
+  <meta name="theme-color" content="#f4efe5">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>document.documentElement.classList.add('js');</script>
+  <script type="module" src="../assets/js/site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти до вмісту</a>
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="wordmark" href="../" aria-label="Юрій Фоменко, на головну">Yurii Fomenko</a>
+      <nav aria-label="Головне">
+        <ul class="nav__links">
+          <li><a href="#work">Роботи</a></li>
+          <li><a href="#admin">Демо</a></li>
+          <li><a href="../" hreflang="en" lang="en">English</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--quiet" href="https://t.me/yourkeey" rel="noopener">Написати в Telegram</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <h1><span class="hero__figure num">583</span> <span class="hero__words">товари, які замовляють прямо в Telegram.</span></h1>
+          <p class="lead">Роблю Telegram-магазини, адмінки та сайти для малого бізнесу.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="https://t.me/yourkeey" rel="noopener">Написати в Telegram</a>
+            <a class="btn btn--outline" href="#admin">Подивитися адмінку</a>
+          </div>
+        </div>
+        <figure class="hero__app">
+          <div class="app-frame" data-kind="product">
+            <iframe src="../demo/miniapp/" title="Telegram Mini App магазину n1kotea, живе демо" loading="eager"></iframe>
+          </div>
+          <figcaption>Справжній Mini App магазину n1kotea на копії живого каталогу. Замовлення з’являються в адмінці нижче й лишаються у вашому браузері.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="admin" id="admin">
+      <div class="container">
+        <div class="head">
+          <h2>Куди потрапляє замовлення</h2>
+          <p class="lead">Сторона менеджера того самого магазину. Підтвердіть оплату, додайте ТТН, відправте й подивіться, що бот пише покупцеві.</p>
+        </div>
+        <div class="crm" data-crm data-seed="../demo/miniapp/seed.json">
+          <table class="crm-static"><thead><tr><th scope="col">Замовлення</th><th scope="col">Покупець</th><th scope="col">Статус</th><th scope="col">Сума</th></tr></thead><tbody><tr><td class="num">№1041</td><td>Ірина Демо</td><td>Доставлено</td><td class="num">750 ₴</td></tr><tr><td class="num">№1042</td><td>Олег Приклад</td><td>Відправлено</td><td class="num">1710 ₴</td></tr><tr><td class="num">№1043</td><td>Марта Тестова</td><td>Оплачено</td><td class="num">300 ₴</td></tr></tbody></table>
+        </div>
+        <div class="admin__foot">
+          <p>Відтворено в браузері за робочою адмінкою. Відстеження Нової пошти імітоване.</p>
+          <button class="btn btn--text" type="button" data-reset>Скинути демо</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="work" id="work">
+      <div class="container">
+        <h2>Магазини, що приймають замовлення</h2>
+        <ol class="work-list">
+        <li class="work-item work-item--lead">
+          <figure class="work-item__shot work-item__live" data-live data-kind="product">
+            <div class="live-frame" data-view="desktop"><iframe src="https://zimin-apiary.com.ua/" title="Інтернет-магазин пасіки Зіміних, живий сайт" loading="lazy" referrerpolicy="no-referrer"></iframe></div>
+            <figcaption><div class="seg" role="group" aria-label="Розмір екрана"><button type="button" data-view="desktop" aria-pressed="true">Комп’ютер</button><button type="button" data-view="phone" aria-pressed="false">Телефон</button></div><button class="btn btn--text" type="button" data-live-open>На весь екран</button><span>Живий магазин: замовлення звідси справжні.</span></figcaption>
+            <dialog class="live-dialog" aria-label="Інтернет-магазин пасіки Зіміних, живий сайт"><div class="live-dialog__bar"><a class="link" href="https://zimin-apiary.com.ua/" rel="noopener">zimin-apiary.com.ua</a><button class="btn btn--text" type="button" data-live-close>Закрити</button></div><iframe title="Інтернет-магазин пасіки Зіміних, живий сайт" data-src="https://zimin-apiary.com.ua/" referrerpolicy="no-referrer"></iframe></dialog>
+          </figure>
+          
+          <div class="work-item__text">
+            <h3>Людина з медом, Zimin Apiary</h3>
+            <p>Інтернет-магазин сімейної пасіки.</p>
+            <dl class="facts"><div><dt>Рік</dt><dd>2026</dd></div><div><dt>Технології</dt><dd>Astro, TypeScript, Cloudflare</dd></div><div><dt>Статус</dt><dd>Працює, приймає замовлення</dd></div></dl>
+            <a class="link" href="https://zimin-apiary.com.ua/" rel="noopener">zimin-apiary.com.ua</a>
+          </div>
+        </li>
+        <li class="work-item">
+          
+          <figure class="work-item__shot" data-slot="work-1" data-kind="product"><img src="../assets/projects/tea-demo-1.jpg" width="1365" height="900" alt="Екран замовлень адмінки TEA BET з тестовими даними" loading="lazy" decoding="async"></figure>
+          <div class="work-item__text">
+            <h3>n1kotea, TEA BET</h3>
+            <p>Telegram-бот, CRM і Mini App для магазину китайського чаю. Mini App угорі сторінки і є його вітриною.</p>
+            <dl class="facts"><div><dt>Рік</dt><dd>2026</dd></div><div><dt>Технології</dt><dd>Python, aiogram 3, FastAPI, React, TypeScript</dd></div><div><dt>Статус</dt><dd>Оплачуваний проєкт, Mini App запущено в жовтні 2026</dd></div></dl>
+            <a class="link" href="https://t.me/TEA_BET_BOT" rel="noopener">@TEA_BET_BOT у Telegram</a>
+          </div>
+        </li>
+        <li class="work-item">
+          
+          
+          <div class="work-item__text">
+            <h3>Цей сайт</h3>
+            <p>Двомовне портфоліо, у якому працюють справжній Mini App і його адмінка.</p>
+            <dl class="facts"><div><dt>Рік</dt><dd>2026</dd></div><div><dt>Технології</dt><dd>HTML, CSS, JavaScript, React для Mini App</dd></div></dl>
+            <a class="link" href="https://github.com/yourkeey/yourkeey.github.io" rel="noopener">Код на GitHub</a>
+          </div>
+        </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="checks" id="checks">
+      <div class="container">
+        <div class="head head--split">
+          <h2>Перевірено перед кожним релізом</h2>
+          <p class="lead">З нотаток до релізів TEA BET, жовтень 2026. Офлайн-прогони на синтетичних даних. <a class="link" href="../verification.html">Нотатки до тестового прогону</a></p>
+        </div>
+        <dl class="figures"><div><dt>smoke-перевірок</dt><dd class="num">1116</dd></div><div><dt>тестів pytest</dt><dd class="num">669</dd></div><div><dt>браузерних сценаріїв</dt><dd class="num">12</dd></div></dl>
+        <ul class="rows"><li><h3>Підпис Telegram перевіряє сервер</h3><p>Магазин довіряє лише підписаним initData (HMAC, одна година), а не тому, що каже браузер.</p></li><li><h3>Ціни перевіряються ще раз</h3><p>Під час оформлення ціни й залишки звіряються в одній транзакції бази даних.</p></li><li><h3>Одне натискання, одне замовлення</h3><p>Повторне надсилання повертає те саме замовлення, а не створює друге.</p></li><li><h3>Релізи, які можна відкотити</h3><p>Кожен реліз має бекап бази, зафіксований образ і скрипт відкату.</p></li></ul>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="container">
+        <h2>Що я можу зробити для вас</h2>
+        <ul class="services__grid"><li><h3>Telegram-боти</h3><p>Каталог, замовлення, сповіщення й розсилки, з інструментами для менеджера.</p></li><li><h3>Mini Apps</h3><p>Повноцінний магазин усередині Telegram на React і TypeScript зі спільним кошиком бота.</p></li><li><h3>CRM та адмінки</h3><p>Замовлення, залишки, клієнти й статус оплати в одному місці.</p></li><li><h3>Сайти й інтернет-магазини</h3><p>Швидкі сторінки й магазини, що надсилають кожне замовлення в Telegram.</p></li></ul>
+        <p class="services__note">Працюю з AI-агентами (Claude Code, Codex) і перевіряю кожен реліз перед запуском.</p>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container contact__grid">
+        <div>
+          <h2>Розкажіть, що потрібно вашому магазину</h2>
+          <p class="lead">Віддалено з України. Повна зайнятість або проєкт із чітким обсягом.</p>
+        </div>
+        <dl class="contacts"><div><dt>Telegram</dt><dd><a href="https://t.me/yourkeey" rel="noopener">@yourkeey</a></dd></div><div><dt>Пошта</dt><dd><a href="mailto:sum4ik41@gmail.com">sum4ik41@gmail.com</a></dd></div><div><dt>GitHub</dt><dd><a href="https://github.com/yourkeey" rel="noopener">github.com/yourkeey</a></dd></div><div><dt>CV</dt><dd><a href="../cv.html">Резюме англійською</a></dd></div></dl>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__mast">Yurii Fomenko</p>
+      <ul class="footer__links">
+        <li><a href="#work">Роботи</a></li>
+        <li><a href="#admin">Демо</a></li>
+        <li><a href="../cv.html">CV</a></li>
+        <li><a href="https://github.com/yourkeey" rel="noopener">GitHub</a></li>
+        <li><a href="../" hreflang="en" lang="en">English</a></li>
+      </ul>
+      <p class="footer__legal">© 2026 Юрій Фоменко. n1kotea та Zimin Apiary є клієнтськими проєктами. Демо-замовлення не залишають ваш браузер.</p>
+    </div>
+  </footer>
+
+  <div class="toast" role="status" hidden data-toast="Замовлення №{id} уже в адмінці" data-toast-link="Відкрити"></div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f4efe5" />
+    <title>n1kotea — демо Mini App</title>
+    <style>
+      /* Замість системної кнопки Telegram «Назад»: смуга згори, що зсуває контент, а не перекриває його. */
+      #back {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 0;
+        border-bottom: 1px solid #ddd3c2;
+        background: #f4efe5f2;
+        backdrop-filter: blur(8px);
+        color: #2b2620;
+        font: 500 15px/1 system-ui, sans-serif;
+        text-align: left;
+        cursor: pointer;
+      }
+      #back[hidden] { display: none; }
+      #back:focus-visible { outline: 2px solid #e2622b; outline-offset: -2px; }
+    </style>
+    <script type="module" crossorigin src="./assets/index-CgJfOTiP.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/index-LtRnxr_f.js">
+  </head>
+  <body>
+    <button id="back" type="button" hidden>‹ Назад</button>
+    <div id="root"></div>
+  </body>
+</html>
