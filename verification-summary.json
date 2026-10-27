@@ -1,0 +1,21 @@
+{
+  "checked_on": "2026-10-06",
+  "source": "Local TEA BET working copy",
+  "environment": "Windows / Python 3.12.14",
+  "smoke": {
+    "passed": 1116,
+    "failed": 0
+  },
+  "pytest": {
+    "passed": 661,
+    "skipped": 5,
+    "errors": 0,
+    "failures": 0
+  },
+  "combined_statement_branch_coverage_percent": 73.54,
+  "scope": "Offline tests with synthetic databases; no live Telegram, Nova Poshta or production-order validation. Not a public CI run.",
+  "skips": [
+    "Four Linux/POSIX release-builder checks",
+    "One symlink-permissions check"
+  ]
+}

@@ -4,3 +4,13 @@
 
 .profile_repo/
 
+# Private career notes, source resumes and test outputs; publish only a reviewed allowlist.
+/Поиск работы/
+/tmp/
+/.edge_temp/
+/resume/candidate-v2.json
+/resume/Yurii_Fomenko_CV_v2.html
+/resume/Yurii_Fomenko_CV_v2.md
+/resume/Yurii_Fomenko_CV_v2.pdf
+/cv-v2.html
+
