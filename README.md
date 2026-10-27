@@ -1,6 +1,6 @@
 # Yurii Fomenko — Web Developer
 
-Websites, lightweight CRM tools and Telegram bots. Open to remote junior roles and contract work.
+Websites, lightweight CRM tools, Telegram bots and Mini Apps. Open to remote junior roles and contract work.
 
 - [Portfolio](https://yourkeey.github.io/)
 - [English CV](cv.html)
@@ -8,7 +8,7 @@ Websites, lightweight CRM tools and Telegram bots. Open to remote junior roles a
 
 ## Project experience
 
-**TEA BET — Telegram shop and CRM.** Paid project for a tea shop owner. The current version is in testing after rebranding and refactoring. Python, aiogram 3, FastAPI, SQLAdmin and SQLite; catalogue, cart, orders, stock, notifications and delivery-status tracking for manually entered waybill numbers.
+**TEA BET — Telegram shop, CRM and Mini App.** Paid project for a tea shop owner. A React/TypeScript Mini App storefront opened from the bot was published in October 2026, with server-side Telegram initData verification and transactional checkout. Python, aiogram 3, FastAPI, SQLAdmin, SQLite, React, TypeScript and Vite; catalogue, cart, orders, stock, notifications and delivery-status tracking for manually entered waybill numbers.
 
 **Zimin Apiary — honey storefront.** Published prototype based on the owner's Instagram shop; not yet processing real orders. Astro, TypeScript and CSS, with a Cloudflare order endpoint that validates the cart and sends order details to Telegram.
 
