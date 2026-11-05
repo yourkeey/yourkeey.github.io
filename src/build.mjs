@@ -3,10 +3,14 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import { strings } from "./strings.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const seed = JSON.parse(readFileSync(join(root, "demo/miniapp/seed.json"), "utf8"));
+const assetVersion = (path) => createHash("sha256").update(readFileSync(join(root, path))).digest("hex").slice(0, 10);
+const cssVersion = assetVersion("assets/css/site.css");
+const jsVersion = assetVersion("assets/js/site.js");
 const site = "https://yourkeey.github.io/";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -62,9 +66,9 @@ function page(t) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="${r}assets/css/site.css">
+  <link rel="stylesheet" href="${r}assets/css/site.css?v=${cssVersion}">
   <script>document.documentElement.classList.add('js');</script>
-  <script type="module" src="${r}assets/js/site.js"></script>
+  <script type="module" src="${r}assets/js/site.js?v=${jsVersion}"></script>
 </head>
 <body>
   <a class="skip" href="#main">${esc(t.skip)}</a>

@@ -44,9 +44,18 @@ for (const viewer of document.querySelectorAll("[data-image-viewer]")) {
     if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !dialog.showModal) return;
     event.preventDefault();
     dialog.showModal();
+    dialog.querySelector("[data-image-close]").focus();
   });
   dialog.querySelector("[data-image-close]").addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && dialog.open) {
+      event.preventDefault();
+      dialog.close();
+    }
+  }, true);
 }
 
 // Live client sites: the desktop view renders the page at 960px (past its desktop breakpoint) and scales it to fit.
