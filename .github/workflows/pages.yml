@@ -1,0 +1,50 @@
+name: Build and publish portfolio
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Refresh shop snapshot
+        if: github.event_name != 'push'
+        run: node src/sync-catalog.mjs
+      - name: Build pages
+        run: node src/build.mjs
+      - name: Save updated snapshot
+        if: github.event_name != 'push'
+        run: |
+          if ! git diff --quiet -- demo/miniapp/seed.json index.html uk/index.html; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add demo/miniapp/seed.json index.html uk/index.html
+            git commit -m 'Refresh demo catalogue'
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -20,7 +20,16 @@ AI coding agents are central to my implementation workflow.
 - **Admin** (`demo/crm.js`): the manager's side, rebuilt in the browser from the production admin's statuses and steps. Nova Poshta tracking is simulated.
 - Both share one state in `localStorage` (`teabet-demo/v1`) and `BroadcastChannel` (`teabet-demo`). Demo orders, carts and stock never leave the visitor's browser and never reach the real shop.
 
-Refresh the catalogue snapshot and the bundle, from `Tea_bot/miniapp`:
+The GitHub Pages workflow refreshes the public catalogue, club and quotes daily at 04:17 UTC. It validates the response before saving, keeps demo orders and stock synthetic, and deploys the last committed snapshot on normal pushes. A failed refresh leaves the previous deployment untouched. The workflow also supports manual runs. Configure GitHub Pages to use **GitHub Actions** as its source and allow the workflow to write repository contents. Scheduled workflows can be delayed or disabled by GitHub for inactive repositories.
+
+To refresh the snapshot locally and regenerate both portfolio pages:
+
+```bash
+node src/sync-catalog.mjs
+node src/build.mjs
+```
+
+To rebuild the Mini App bundle itself after changing its source, from `Tea_bot/miniapp`:
 
 ```bash
 node demo/make-seed.mjs && DEMO_OUT=../../portfolio/demo/miniapp npx vite build -c vite.demo.config.ts

@@ -86,7 +86,7 @@ function page(t) {
     <section class="hero" id="top">
       <div class="container hero__grid">
         <div class="hero__text">
-          <h1><span class="hero__figure num">${t.heroFigure}</span> <span class="hero__words">${esc(t.heroHead)}</span></h1>
+          <h1><span class="hero__figure num">${seed.catalog.length}</span> <span class="hero__words">${esc(t.heroHead)}</span></h1>
           <p class="lead">${esc(t.heroLead)}</p>
           <div class="actions">
             <a class="btn btn--primary" href="https://t.me/yourkeey" rel="noopener">${esc(t.heroPrimary)}</a>
