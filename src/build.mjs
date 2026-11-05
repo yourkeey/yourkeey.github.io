@@ -1,186 +1,62 @@
-// Builds index.html (English) and uk/index.html (Ukrainian) from one template.
-// Run from the repo root: node src/build.mjs
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { createHash } from "node:crypto";
-import { strings } from "./strings.mjs";
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const seed = JSON.parse(readFileSync(join(root, "demo/miniapp/seed.json"), "utf8"));
-const assetVersion = (path) => createHash("sha256").update(readFileSync(join(root, path))).digest("hex").slice(0, 10);
-const cssVersion = assetVersion("assets/css/site.css");
-const jsVersion = assetVersion("assets/js/site.js");
-const site = "https://yourkeey.github.io/";
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const languages = {
+  uk: {
+    title: 'Юрій Фоменко — веброзробник', skip: 'Перейти до вмісту', work: 'Проєкти', demo: 'Демо', services: 'Співпраця', contact: 'Написати', other: 'English', otherHref: '../',
+    imageOpen: 'Відкрити скриншот адмінки на весь екран', imageClose: 'Закрити', imageAlt: 'Скриншот адмінки TEA BET із прикладами даних', eyebrow: 'ВЕБРОЗРОБНИК · УКРАЇНА / ВІДДАЛЕНО',
+    h1: 'Від ідеї до продукту, яким користуються.',
+    lead: 'Створюю сайти, Telegram-магазини та інструменти для бізнесу. Відкритий до роботи в команді й проєктної співпраці.',
+    cv: 'Переглянути CV', projects: 'Дивитися проєкти', available: 'ПОВНА ЗАЙНЯТІСТЬ / ПРОЄКТИ',
+    heroCardLabel: 'ОБРАНИЙ ПРОЄКТ / 01', heroCardTitle: 'Магазин у Telegram. І все, що за ним стоїть.', heroCardText: 'Mini App, бот і адмінка для чайної крамниці n1kotea.', explore: 'Дослідити проєкт',
+    selected: 'ОБРАНІ РОБОТИ', caseLabel: '01 / КЛІЄНТСЬКИЙ ПРОЄКТ', caseTitle: 'Магазин, який живе в Telegram.',
+    caseIntro: 'n1kotea / TEA BET — бот, Mini App і CRM для магазину китайського чаю. Оплачуваний клієнтський проєкт; Mini App запущено в жовтні 2026.',
+    taskLabel: 'ЗАДАЧА', task: 'Дати покупцю зручну вітрину й оформлення замовлення, а менеджеру — інструмент для роботи із замовленнями та товарами.',
+    contributionLabel: 'ЩО ЗРОБЛЕНО', contribution: 'Розробка бота, вітрини та адмінки з AI-асистуванням: каталог, кошик, оформлення, статуси замовлень, сповіщення й відстеження доставки.',
+    resultLabel: 'СТАТУС', result: 'Mini App опубліковано; каталог і демо нижче дозволяють дослідити покупку та роботу менеджера.',
+    stack: 'Python · aiogram 3 · FastAPI · React · TypeScript', bot: 'Відкрити бота в Telegram ↗',
+    demoLabel: 'СПРОБУЙТЕ САМІ / MINI APP', demoTitle: 'Спочатку — очима покупця.', demoIntro: 'Оберіть чай і оформіть демо-замовлення. Далі воно з’явиться в адмінці на цій сторінці.', demoCaption: 'Копія каталогу магазину періодично оновлюється. Демо-замовлення залишаються у вашому браузері.', appTitle: 'Демо Mini App магазину n1kotea',
+    adminLabel: 'ТЕПЕР — З БОКУ МЕНЕДЖЕРА', adminTitle: 'Куди потрапляє замовлення', adminIntro: 'Спробуйте на готовому прикладі або оформіть власне демо-замовлення у вітрині вище.', steps: ['Підтвердьте оплату', 'Перевірте тестову ТТН', 'Відправте замовлення'], example: 'Тестову ТТН уже підставлено — за потреби її можна змінити.', adminNote: 'Адмінку відтворено в браузері за робочою системою. Відстеження Нової пошти й повідомлення імітовані.', reset: 'Скинути демо',
+    honeyLabel: '02 / КЛІЄНТСЬКИЙ ПРОЄКТ', honeyTitle: 'Людина з медом', honeyIntro: 'Інтернет-магазин сімейної пасіки, створений на основі Instagram-крамниці. Сайт працює та приймає замовлення.', honeyTask: 'Каталог, сторінки товарів, варіанти й кошик допомагають покупцю обрати мед і оформити замовлення.', honeyContribution: 'Розробка сайту з AI-асистуванням: валідація кошика на сервері та надсилання даних замовлення в Telegram.', honeyStack: 'Astro · TypeScript · CSS · Cloudflare', honeyLink: 'Відкрити сайт пасіки ↗', warning: 'Увага: це живий магазин. Замовлення звідси справжні.', views: 'Розмір екрана', desktop: 'Комп’ютер', phone: 'Телефон', expand: 'На весь екран', close: 'Закрити', liveTitle: 'Живий інтернет-магазин пасіки Зіміних',
+    qualityLabel: 'ЯК Я ПРАЦЮЮ', qualityTitle: 'Продумую не лише вітрину.', qualityLead: 'За інтерфейсом — перевірка даних, надійне оформлення замовлення та можливість відновлення після релізу.', quality: [['Безпека', 'Сервер перевіряє підпис Telegram initData.'], ['Оформлення', 'Ціни й залишки перевіряються в транзакції; повторне надсилання не створює дубль.'], ['Реліз', 'Для TEA BET передбачені резервна копія бази, зафіксований образ і скрипт відкату.']], qualityNote: 'Результати конкретного офлайн-прогону TEA BET на синтетичних даних, жовтень 2026: 1116 smoke-перевірок, 669 тестів pytest, 12 браузерних сценаріїв.', notes: 'Нотатки до перевірки ↗',
+    servicesLabel: 'СПІВПРАЦЯ', servicesTitle: 'Для команди. Для вашого бізнесу.', servicesLead: 'Можу долучитися до команди або взяти проєкт із чітким обсягом роботи.', service1: 'Веброзробка', service1Text: 'Сайти, онлайн-магазини та внутрішні інструменти — від інтерфейсу до логіки замовлень.', service2: 'Telegram-продукти', service2Text: 'Боти, Mini Apps, адмінки, каталоги, сповіщення та робочі процеси менеджера.', serviceNote: 'Працюю з AI-агентами Claude Code і Codex; перевіряю результати перед запуском.',
+    contactLabel: 'НАСТУПНИЙ КРОК', contactTitle: 'Обговорімо роботу або ваш проєкт.', contactLead: 'Віддалено з України. Відкритий до повної зайнятості та проєктної співпраці.', email: 'Пошта', cvLink: 'Резюме англійською', footer: 'Клієнтські проєкти: n1kotea та Zimin Apiary. Демо-замовлення не залишають браузер.', toast: 'Замовлення №{id} уже в адмінці', open: 'Відкрити'
+  },
+  en: {
+    title: 'Yurii Fomenko — Web Developer', skip: 'Skip to content', work: 'Projects', demo: 'Demo', services: 'Work together', contact: 'Get in touch', other: 'Українською', otherHref: 'uk/',
+    imageOpen: 'Open the admin screenshot full screen', imageClose: 'Close', imageAlt: 'TEA BET admin screenshot with sample data', eyebrow: 'WEB DEVELOPER · UKRAINE / REMOTE', h1: 'From an idea to a product people use.', lead: 'I build websites, Telegram shops and tools for businesses. Open to joining a team and to project work.', cv: 'View CV', projects: 'Explore projects', available: 'FULL-TIME / PROJECT WORK',
+    heroCardLabel: 'FEATURED PROJECT / 01', heroCardTitle: 'A shop in Telegram. And everything behind it.', heroCardText: 'A Mini App, bot and admin panel for the n1kotea tea shop.', explore: 'Explore the project',
+    selected: 'SELECTED WORK', caseLabel: '01 / CLIENT PROJECT', caseTitle: 'A shop that lives in Telegram.', caseIntro: 'n1kotea / TEA BET is a bot, Mini App and CRM for a Chinese tea shop. A paid client project; the Mini App launched in October 2026.',
+    taskLabel: 'THE CHALLENGE', task: 'Give customers a convenient storefront and checkout, and the manager tools to handle orders and products.', contributionLabel: 'WHAT I BUILT', contribution: 'Built the bot, storefront and admin with AI assistance: catalogue, cart, checkout, order statuses, notifications and delivery tracking.', resultLabel: 'STATUS', result: 'The Mini App is published; the catalogue and demo below let you explore the customer and manager flows.', stack: 'Python · aiogram 3 · FastAPI · React · TypeScript', bot: 'Open the bot in Telegram ↗',
+    demoLabel: 'TRY IT / MINI APP', demoTitle: 'First, the customer’s view.', demoIntro: 'Choose a tea and place a demo order. It will appear in the admin panel on this page.', demoCaption: 'The catalogue snapshot is updated periodically. Demo orders stay in your browser.', appTitle: 'n1kotea Mini App demo',
+    adminLabel: 'NOW, THE MANAGER’S SIDE', adminTitle: 'Where the order lands', adminIntro: 'Try the sample order or place your own demo order in the storefront above.', steps: ['Confirm payment', 'Check the test waybill', 'Mark as shipped'], example: 'A test waybill is already filled in; you can change it.', adminNote: 'The admin is recreated in the browser from the production system. Nova Poshta tracking and messages are simulated.', reset: 'Reset demo',
+    honeyLabel: '02 / CLIENT PROJECT', honeyTitle: 'Zimin Apiary', honeyIntro: 'An online store for a family apiary, built from the owner’s Instagram shop. The store is live and accepting orders.', honeyTask: 'A catalogue, product pages, variants and cart help customers choose honey and place orders.', honeyContribution: 'Built with AI assistance: server-side cart validation and an order endpoint that sends details to Telegram.', honeyStack: 'Astro · TypeScript · CSS · Cloudflare', honeyLink: 'Visit the apiary website ↗', warning: 'Please note: this is a live shop. Orders placed here are real.', views: 'Screen size', desktop: 'Desktop', phone: 'Phone', expand: 'Expand', close: 'Close', liveTitle: 'Zimin Apiary live online store',
+    qualityLabel: 'HOW I WORK', qualityTitle: 'The work behind the storefront.', qualityLead: 'Behind the interface: validated data, reliable checkout and a way back if a release needs to be undone.', quality: [['Security', 'The server verifies the Telegram initData signature.'], ['Checkout', 'Prices and stock are checked in a transaction; repeated submission does not create a duplicate.'], ['Release', 'TEA BET includes a database backup, pinned image and rollback script.']], qualityNote: 'A specific offline TEA BET run on synthetic data, October 2026: 1,116 smoke checks, 669 pytest tests and 12 browser scenarios.', notes: 'Verification notes ↗',
+    servicesLabel: 'WORK TOGETHER', servicesTitle: 'For your team. For your business.', servicesLead: 'I can join a team or take on a clearly scoped project.', service1: 'Web development', service1Text: 'Websites, online stores and internal tools — from the interface to order handling.', service2: 'Telegram products', service2Text: 'Bots, Mini Apps, admin panels, catalogues, notifications and manager workflows.', serviceNote: 'I work with Claude Code and Codex AI agents and check the results before release.',
+    contactLabel: 'NEXT STEP', contactTitle: 'Let’s talk about a role or your project.', contactLead: 'Remote from Ukraine. Open to full-time roles and project work.', email: 'Email', cvLink: 'English CV', footer: 'Client projects: n1kotea and Zimin Apiary. Demo orders stay in your browser.', toast: 'Order №{id} is in the admin', open: 'Open'
+  }
+};
 
-const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const ext = (href) => (/^https?:/.test(href) ? ' rel="noopener"' : "");
-
-// The admin as plain HTML: what a visitor sees before (or without) demo/crm.js.
-function staticOrders(t) {
-  const label = t.lang === "uk" ? { n: "Замовлення", c: "Покупець", s: "Статус", sum: "Сума" } : { n: "Order", c: "Customer", s: "Status", sum: "Total" };
-  const rows = seed.orders
-    .map((o) => `<tr><td class="num">№${o.id}</td><td>${esc(o.customer.fullname)}</td><td>${esc(o.status)}</td><td class="num">${o.total} ₴</td></tr>`)
-    .join("");
-  return `<table class="crm-static"><thead><tr><th scope="col">${label.n}</th><th scope="col">${label.c}</th><th scope="col">${label.s}</th><th scope="col">${label.sum}</th></tr></thead><tbody>${rows}</tbody></table>`;
+function page(t, uk) {
+  const up = uk ? '../' : './';
+  const repo = uk ? '../' : './';
+  const url = `https://yourkeey.github.io/${uk ? 'uk/' : ''}`;
+  return `<!doctype html><html lang="${uk ? 'uk' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${t.lead}"><title>${t.title}</title><link rel="canonical" href="${url}"><link rel="alternate" hreflang="en" href="https://yourkeey.github.io/"><link rel="alternate" hreflang="uk" href="https://yourkeey.github.io/uk/"><link rel="alternate" hreflang="x-default" href="https://yourkeey.github.io/"><meta property="og:title" content="${t.title}"><meta property="og:description" content="${t.lead}"><meta property="og:url" content="${url}"><meta property="og:type" content="website"><meta property="og:image" content="https://yourkeey.github.io/assets/projects/tea-demo-1.jpg"><meta name="theme-color" content="#f4f0e8"><link rel="icon" href="${repo}assets/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="${repo}assets/css/site.css"><link rel="stylesheet" href="${repo}assets/css/portfolio-v2.css"><script>document.documentElement.classList.add('js')</script><script type="module" src="${repo}assets/js/site-v2.js"></script></head><body>
+  <a class="skip" href="#main">${t.skip}</a><header class="nav"><div class="container nav__inner"><a class="wordmark" href="#top">Yurii Fomenko<span class="mark-dot">.</span></a><nav aria-label="Navigation"><ul class="nav__links"><li><a href="#work">${t.work}</a></li><li><a href="#admin">${t.demo}</a></li><li><a href="#services">${t.services}</a></li><li><a href="${t.otherHref}">${t.other}</a></li></ul></nav><a class="btn btn--quiet" href="https://t.me/yourkeey">${t.contact} ↗</a></div></header>
+  <main id="main"><section class="intro" id="top"><div class="container intro__grid"><div><p class="eyebrow"><span class="status-dot"></span>${t.eyebrow}</p><h1>${t.h1}</h1><p class="intro__lead">${t.lead}</p><div class="actions"><a class="btn btn--primary" href="#work">${t.projects} <span aria-hidden="true">↘</span></a><a class="btn btn--outline" href="${repo}cv.html">${t.cv} ↗</a></div><p class="intro__availability"><span></span>${t.available}</p></div><article class="feature" data-image-viewer><div class="feature__top"><span>${t.heroCardLabel}</span><span>↗</span></div><a class="feature__image" href="${repo}assets/projects/tea-demo-1.jpg" aria-label="${t.imageOpen}"><img src="${repo}assets/projects/tea-demo-1.jpg" alt="${t.imageAlt}"><span class="feature__zoom" aria-hidden="true">⤢</span></a><dialog class="image-dialog" aria-label="${t.imageAlt}"><button type="button" class="image-dialog__close" data-image-close>${t.imageClose} ✕</button><img src="${repo}assets/projects/tea-demo-1.jpg" alt="${t.imageAlt}"></dialog><div class="feature__bottom"><div><h2>${t.heroCardTitle}</h2><p>${t.heroCardText}</p><a class="feature__link" href="#tea-project">${t.explore} ↗</a></div><span class="feature__arrow" aria-hidden="true">↗</span></div></article></div><div class="container intro__bottom"><span>YURII FOMENKO / PORTFOLIO</span><span>2026 — UKRAINE</span></div></section>
+  <section class="project-intro" id="work"><div class="container"><div class="section-heading"><p class="eyebrow">${t.selected}</p><span>01 — 02</span></div><div id="tea-project" class="case-heading"><div><p class="eyebrow accent">${t.caseLabel}</p><h2>${t.caseTitle}</h2></div><p class="case-heading__lead">${t.caseIntro}</p></div><div class="case-details"><div><h3>${t.taskLabel}</h3><p>${t.task}</p></div><div><h3>${t.contributionLabel}</h3><p>${t.contribution}</p></div><div><h3>${t.resultLabel}</h3><p>${t.result}</p></div></div><div class="case-meta"><span>${t.stack}</span><a href="https://t.me/TEA_BET_BOT">${t.bot}</a></div></div></section>
+  <section class="hero demo-store" id="store"><div class="container store-grid"><div class="store-copy"><p class="eyebrow accent">${t.demoLabel}</p><h2>${t.demoTitle}</h2><p class="lead">${t.demoIntro}</p><a class="text-link" href="#admin">${t.adminTitle} ↓</a><p class="demo-caption">${t.demoCaption}</p></div><figure class="hero__app"><div class="app-frame"><iframe src="${up}demo/miniapp/" title="${t.appTitle}" loading="lazy"></iframe></div><figcaption>${t.demoCaption}</figcaption></figure></div></section>
+  <section class="admin" id="admin"><div class="container"><div class="admin-heading"><div><p class="eyebrow accent">${t.adminLabel}</p><h2>${t.adminTitle}</h2></div><p class="lead">${t.adminIntro}</p></div><ol class="demo-steps">${t.steps.map((s,i)=>`<li><span>0${i+1}</span>${s}</li>`).join('')}</ol><p class="example">${t.example}</p><div class="crm" data-crm data-seed="${up}demo/miniapp/seed.json"><p>${t.adminIntro}</p></div><div class="admin__foot"><p>${t.adminNote}</p><button class="btn btn--text" type="button" data-reset>${t.reset}</button></div></div></section>
+  <section class="honey" id="honey-project"><div class="container"><div class="case-heading"><div><p class="eyebrow accent">${t.honeyLabel}</p><h2>${t.honeyTitle}<span class="honey-mark">.</span></h2></div><p class="case-heading__lead">${t.honeyIntro}</p></div><div class="honey__details"><p>${t.honeyTask}</p><p>${t.honeyContribution}</p></div><div class="case-meta"><span>${t.honeyStack}</span><a href="https://zimin-apiary.com.ua/">${t.honeyLink}</a></div><figure class="work-item__shot work-item__live honey__live" data-live><div class="live-warning"><span aria-hidden="true">!</span><strong>${t.warning}</strong></div><div class="live-frame" data-view="desktop"><iframe src="https://zimin-apiary.com.ua/" title="${t.liveTitle}" loading="lazy" referrerpolicy="no-referrer"></iframe></div><figcaption><div class="seg" role="group" aria-label="${t.views}"><button type="button" data-view="desktop" aria-pressed="true">${t.desktop}</button><button type="button" data-view="phone" aria-pressed="false">${t.phone}</button></div><button class="btn btn--text" type="button" data-live-open>${t.expand} ↗</button></figcaption><dialog class="live-dialog" aria-label="${t.liveTitle}"><div class="live-dialog__bar"><strong>${t.warning}</strong><button class="btn btn--text" type="button" data-live-close>${t.close} ✕</button></div><iframe title="${t.liveTitle}" data-src="https://zimin-apiary.com.ua/" referrerpolicy="no-referrer"></iframe></dialog></figure></div></section>
+  <section class="quality" id="checks"><div class="container"><div class="case-heading"><div><p class="eyebrow accent">${t.qualityLabel}</p><h2>${t.qualityTitle}</h2></div><p class="case-heading__lead">${t.qualityLead}</p></div><div class="quality__grid">${t.quality.map(([h,p],i)=>`<article><span>0${i+1}</span><h3>${h}</h3><p>${p}</p></article>`).join('')}</div><p class="quality__note">${t.qualityNote} <a href="${repo}verification.html">${t.notes}</a></p></div></section>
+  <section class="services" id="services"><div class="container"><div class="case-heading"><div><p class="eyebrow accent">${t.servicesLabel}</p><h2>${t.servicesTitle}</h2></div><p class="case-heading__lead">${t.servicesLead}</p></div><ul class="services__grid"><li><h3>${t.service1}</h3><p>${t.service1Text}</p></li><li><h3>${t.service2}</h3><p>${t.service2Text}</p></li></ul><p class="services__note">${t.serviceNote}</p></div></section>
+  <section class="contact" id="contact"><div class="container contact__grid"><div><p class="eyebrow contact__eyebrow">${t.contactLabel}</p><h2>${t.contactTitle}</h2><p class="lead">${t.contactLead}</p><a class="contact__button btn btn--primary" href="https://t.me/yourkeey">Telegram ↗</a></div><dl class="contacts"><div><dt>${t.email}</dt><dd><a href="mailto:sum4ik41@gmail.com">sum4ik41@gmail.com</a></dd></div><div><dt>GitHub</dt><dd><a href="https://github.com/yourkeey">github.com/yourkeey ↗</a></dd></div><div><dt>CV</dt><dd><a href="${repo}cv.html">${t.cvLink} ↗</a></dd></div></dl></div></section></main>
+  <footer class="footer"><div class="container"><p class="footer__mast">Yurii Fomenko<span class="mark-dot">.</span></p><ul class="footer__links"><li><a href="#work">${t.work}</a></li><li><a href="#admin">${t.demo}</a></li><li><a href="${repo}cv.html">CV</a></li><li><a href="${t.otherHref}">${t.other}</a></li></ul><p class="footer__legal">© 2026 Yurii Fomenko. ${t.footer}</p></div></footer><div class="toast" role="status" hidden data-toast="${t.toast}" data-toast-link="${t.open}"></div></body></html>`;
 }
 
-function page(t) {
-  const r = t.lang === "en" ? "" : "../";
-  const self = t.lang === "en" ? site : `${site}uk/`;
-  const work = t.work
-    .map((w, i) => `
-        <li class="work-item${i === 0 ? " work-item--lead" : ""}">
-          ${w.live ? `<figure class="work-item__shot work-item__live" data-live data-kind="product">
-            <div class="live-frame" data-view="desktop"><iframe src="${w.live.src}" title="${esc(w.live.title)}" loading="lazy" referrerpolicy="no-referrer"></iframe></div>
-            <figcaption><div class="seg" role="group" aria-label="${esc(w.live.views)}"><button type="button" data-view="desktop" aria-pressed="true">${esc(w.live.desktop)}</button><button type="button" data-view="phone" aria-pressed="false">${esc(w.live.phone)}</button></div><button class="btn btn--text" type="button" data-live-open>${esc(w.live.expand)}</button><span>${esc(w.live.note)}</span></figcaption>
-            <dialog class="live-dialog" aria-label="${esc(w.live.title)}"><div class="live-dialog__bar"><a class="link" href="${w.live.src}" rel="noopener">${esc(w.link.label)}</a><button class="btn btn--text" type="button" data-live-close>${esc(w.live.close)}</button></div><iframe title="${esc(w.live.title)}" data-src="${w.live.src}" referrerpolicy="no-referrer"></iframe></dialog>
-          </figure>` : ""}
-          ${w.image ? `<figure class="work-item__shot work-item__image" data-slot="work-${i}" data-kind="product" data-image-viewer><a href="${r}${w.image.src}" class="work-item__image-link" aria-label="${esc(t.imageExpand)}"><img src="${r}${w.image.src}" width="${w.image.width}" height="${w.image.height}" alt="${esc(w.image.alt)}" loading="lazy" decoding="async"><span class="work-item__image-hint" aria-hidden="true">↗</span></a><dialog class="image-dialog" aria-label="${esc(w.image.alt)}"><button type="button" class="image-dialog__close" data-image-close>${esc(t.imageClose)} ✕</button><img src="${r}${w.image.src}" alt="${esc(w.image.alt)}"></dialog></figure>` : ""}
-          <div class="work-item__text">
-            <h3>${esc(w.name)}</h3>
-            <p>${esc(w.line)}</p>
-            <dl class="facts">${w.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
-            <a class="link" href="${w.link.href}"${ext(w.link.href)}>${esc(w.link.label)}</a>
-          </div>
-        </li>`)
-    .join("");
-  return `<!doctype html>
-<html lang="${t.lang}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(t.title)}</title>
-  <meta name="description" content="${esc(t.description)}">
-  <link rel="canonical" href="${self}">
-  <link rel="alternate" hreflang="en" href="${site}">
-  <link rel="alternate" hreflang="uk" href="${site}uk/">
-  <link rel="alternate" hreflang="x-default" href="${site}">
-  <meta property="og:title" content="${esc(t.title)}">
-  <meta property="og:description" content="${esc(t.description)}">
-  <meta property="og:url" content="${self}">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="${site}assets/projects/zimin-home.webp">
-  <meta name="theme-color" content="#f4efe5">
-  <link rel="icon" href="${r}assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="${r}assets/css/site.css?v=${cssVersion}">
-  <script>document.documentElement.classList.add('js');</script>
-  <script type="module" src="${r}assets/js/site.js?v=${jsVersion}"></script>
-</head>
-<body>
-  <a class="skip" href="#main">${esc(t.skip)}</a>
-  <header class="nav">
-    <div class="container nav__inner">
-      <a class="wordmark" href="${r || "./"}" aria-label="${esc(t.home)}">Yurii Fomenko</a>
-      <nav aria-label="${esc(t.navLabel)}">
-        <ul class="nav__links">
-          <li><a href="#work">${esc(t.navWork)}</a></li>
-          <li><a href="#admin">${esc(t.navDemo)}</a></li>
-          <li><a href="${r ? "../" : "uk/"}" hreflang="${t.other.lang}" lang="${t.other.lang}">${esc(t.other.label)}</a></li>
-        </ul>
-      </nav>
-      <a class="btn btn--quiet" href="https://t.me/yourkeey" rel="noopener">${esc(t.navAction)}</a>
-    </div>
-  </header>
-
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="container hero__grid">
-        <div class="hero__text">
-          <h1><span class="hero__figure num">${seed.catalog.length}</span> <span class="hero__words">${esc(t.heroHead)}</span></h1>
-          <p class="lead">${esc(t.heroLead)}</p>
-          <div class="actions">
-            <a class="btn btn--primary" href="https://t.me/yourkeey" rel="noopener">${esc(t.heroPrimary)}</a>
-            <a class="btn btn--outline" href="#admin">${esc(t.heroSecondary)}</a>
-          </div>
-        </div>
-        <figure class="hero__app">
-          <div class="app-frame" data-kind="product">
-            <iframe src="${r}demo/miniapp/" title="${esc(t.appTitle)}" loading="eager"></iframe>
-          </div>
-          <figcaption>${esc(t.appCaption)}</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="admin" id="admin">
-      <div class="container">
-        <div class="head">
-          <h2>${esc(t.adminHead)}</h2>
-          <p class="lead">${esc(t.adminLead)}</p>
-        </div>
-        <div class="crm" data-crm data-seed="${r}demo/miniapp/seed.json">
-          ${staticOrders(t)}
-        </div>
-        <div class="admin__foot">
-          <p>${esc(t.adminNote)}</p>
-          <button class="btn btn--text" type="button" data-reset>${esc(t.reset)}</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="work" id="work">
-      <div class="container">
-        <h2>${esc(t.workHead)}</h2>
-        <ol class="work-list">${work}
-        </ol>
-      </div>
-    </section>
-
-    <section class="checks" id="checks">
-      <div class="container">
-        <div class="head head--split">
-          <h2>${esc(t.checksHead)}</h2>
-          <p class="lead">${esc(t.checksLead)} <a class="link" href="${r}verification.html">${esc(t.checksLink)}</a></p>
-        </div>
-        <dl class="figures">${t.figures.map(([n, l]) => `<div><dt>${esc(l)}</dt><dd class="num">${n}</dd></div>`).join("")}</dl>
-        <ul class="rows">${t.checks.map(([h, p]) => `<li><h3>${esc(h)}</h3><p>${esc(p)}</p></li>`).join("")}</ul>
-      </div>
-    </section>
-
-    <section class="services" id="services">
-      <div class="container">
-        <h2>${esc(t.servicesHead)}</h2>
-        <ul class="services__grid">${t.services.map(([h, p]) => `<li><h3>${esc(h)}</h3><p>${esc(p)}</p></li>`).join("")}</ul>
-        <p class="services__note">${esc(t.servicesNote)}</p>
-      </div>
-    </section>
-
-    <section class="contact" id="contact">
-      <div class="container contact__grid">
-        <div>
-          <h2>${esc(t.contactHead)}</h2>
-          <p class="lead">${esc(t.contactLead)}</p>
-        </div>
-        <dl class="contacts">${t.contacts.map(([k, v, href]) => `<div><dt>${esc(k)}</dt><dd><a href="${/^(https?:|mailto:)/.test(href) ? href : r + href}"${ext(href)}>${esc(v)}</a></dd></div>`).join("")}</dl>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <p class="footer__mast">Yurii Fomenko</p>
-      <ul class="footer__links">
-        <li><a href="#work">${esc(t.navWork)}</a></li>
-        <li><a href="#admin">${esc(t.navDemo)}</a></li>
-        <li><a href="${r}cv.html">CV</a></li>
-        <li><a href="https://github.com/yourkeey" rel="noopener">GitHub</a></li>
-        <li><a href="${r ? "../" : "uk/"}" hreflang="${t.other.lang}" lang="${t.other.lang}">${esc(t.other.label)}</a></li>
-      </ul>
-      <p class="footer__legal">${esc(t.legal)}</p>
-    </div>
-  </footer>
-
-  <div class="toast" role="status" hidden data-toast="${esc(t.toast("{id}"))}" data-toast-link="${esc(t.toastLink)}"></div>
-</body>
-</html>
-`;
-}
-
-writeFileSync(join(root, "index.html"), page(strings.en));
-mkdirSync(join(root, "uk"), { recursive: true });
-writeFileSync(join(root, "uk/index.html"), page(strings.uk));
-console.log("built index.html and uk/index.html");
+mkdirSync(join(root, 'uk'), { recursive: true });
+writeFileSync(join(root, 'index.html'), page(languages.en, false));
+writeFileSync(join(root, 'uk/index.html'), page(languages.uk, true));
+console.log('Built index.html and uk/index.html.');

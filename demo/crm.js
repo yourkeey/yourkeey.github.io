@@ -1,9 +1,9 @@
 // Admin demo: the manager's side of the n1kotea shop, rebuilt in the browser.
 // It shares one state with the Mini App in the hero (built from the private Tea_bot repo,
-// miniapp/demo/api.ts): localStorage "teabet-demo/v1", announced on BroadcastChannel "teabet-demo".
+// miniapp/demo/api.ts): localStorage "teabet-preview-v2/v1", announced on BroadcastChannel "teabet-preview-v2".
 // Statuses and the order of steps follow the production admin (services/orders.py).
 
-const KEY = "teabet-demo/v1";
+const KEY = "teabet-preview-v2/v1";
 const NEW = "Нове", PAID = "Оплачено", SHIPPED = "Відправлено", DELIVERED = "Доставлено", CANCELLED = "Скасовано";
 const ARCHIVED = [DELIVERED, CANCELLED];
 
@@ -30,7 +30,7 @@ const L = {
   },
 };
 
-const channel = "BroadcastChannel" in window ? new BroadcastChannel("teabet-demo") : null;
+const channel = "BroadcastChannel" in window ? new BroadcastChannel("teabet-preview-v2") : null;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 function read() {
@@ -152,7 +152,7 @@ export async function mountCrm(root) {
       actions = `<div class="row"><button class="btn btn--primary" type="button" data-act="pay">${t.confirm}</button><button class="btn" type="button" data-act="cancel">${t.cancel}</button></div>`;
     else if (o.status === PAID)
       actions = `<form class="row" data-ship novalidate>
-          <div class="field" style="flex:1 1 12rem"><label for="ttn">${t.ttn}</label><input id="ttn" name="ttn" inputmode="numeric" autocomplete="off" maxlength="14" placeholder="20450000000000" aria-invalid="${Boolean(ttnError)}" aria-describedby="ttn-error"></div>
+          <div class="field" style="flex:1 1 12rem"><label for="ttn">${t.ttn}</label><input id="ttn" name="ttn" inputmode="numeric" autocomplete="off" maxlength="14" value="20450000000000" aria-invalid="${Boolean(ttnError)}" aria-describedby="ttn-error"></div>
           <button class="btn btn--primary" type="submit">${t.ship}</button>
         </form><p class="error" id="ttn-error">${ttnError}</p>`;
     else if (o.status === SHIPPED)
@@ -256,7 +256,7 @@ export async function mountCrm(root) {
   resetButton?.addEventListener("click", async () => {
     state = fresh(seed || (await seedReady));
     view = "active";
-    selected = state.orders.find((o) => !ARCHIVED.includes(o.status))?.id ?? null;
+    selected = [...state.orders].filter((o) => !ARCHIVED.includes(o.status)).sort((a, b) => b.created_at - a.created_at)[0]?.id ?? null;
     write(state);
     render();
     document.querySelector(".hero iframe")?.contentWindow?.location.reload();
