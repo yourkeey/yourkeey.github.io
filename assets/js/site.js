@@ -37,6 +37,18 @@ toast?.addEventListener("click", (e) => {
 if ("BroadcastChannel" in window) new BroadcastChannel("teabet-demo").addEventListener("message", announce);
 window.addEventListener("storage", (e) => e.key === KEY && announce());
 
+for (const viewer of document.querySelectorAll("[data-image-viewer]")) {
+  const link = viewer.querySelector("a");
+  const dialog = viewer.querySelector("dialog");
+  link.addEventListener("click", (event) => {
+    if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !dialog.showModal) return;
+    event.preventDefault();
+    dialog.showModal();
+  });
+  dialog.querySelector("[data-image-close]").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+}
+
 // Live client sites: the desktop view renders the page at 960px (past its desktop breakpoint) and scales it to fit.
 for (const live of document.querySelectorAll("[data-live]")) {
   const frame = live.querySelector(".live-frame");

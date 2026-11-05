@@ -140,6 +140,17 @@ td.num, th.num { text-align: right; font-family: var(--font-outlier); font-varia
 .work-item:not(:has(.work-item__shot)) .work-item__text > h3 { grid-column: 1; grid-row: 1 / span 3; }
 .work-item--lead { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); padding-block: var(--space-2xl); }
 .work-item__shot { margin: 0; aspect-ratio: 16 / 10; border-radius: min(1vw, var(--radius-card)); box-shadow: inset 0 0 0 1px var(--color-rule); }
+.work-item__image-link { display: block; position: relative; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; cursor: zoom-in; }
+.work-item__image-link > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.work-item__image-hint { position: absolute; right: 12px; bottom: 12px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--color-paper); color: var(--color-ink); font-size: 20px; box-shadow: var(--shadow-lift); transition: transform var(--dur-short) var(--ease-out); }
+.work-item__image-link:hover .work-item__image-hint { transform: scale(1.1); }
+.work-item__image-link:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 4px; }
+.image-dialog { width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: 64px 16px 16px; border: 0; background: var(--color-ink); }
+.image-dialog[open] { display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; }
+.image-dialog::backdrop { background: var(--color-ink); }
+.image-dialog img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.image-dialog__close { position: absolute; top: 12px; right: 16px; padding: 10px 14px; border: 1px solid currentColor; border-radius: 4px; background: var(--color-paper); color: var(--color-ink); cursor: pointer; }
+.image-dialog__close:focus-visible { outline: 3px solid var(--color-paper); outline-offset: 3px; }
 .work-item__live { aspect-ratio: auto; border-radius: 0; box-shadow: none; }
 .live-frame { position: relative; height: var(--live-h); overflow: hidden; border-radius: var(--radius-entry); background: var(--color-paper-2); box-shadow: 0 0 0 1px var(--color-ink), var(--shadow-lift); }
 .live-frame iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--color-paper); transition: opacity var(--dur-short) var(--ease-out); }
