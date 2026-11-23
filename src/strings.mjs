@@ -48,7 +48,7 @@ export const strings = {
     ],
     checksHead: "Checked before every release",
     checksLead: "From the TEA BET release notes, October 2026. Offline runs on synthetic data.",
-    figures: [["1,116", "smoke checks"], ["669", "pytest tests"], ["12", "browser scenarios"]],
+    figures: [["1,116", "smoke checks"], ["661", "pytest tests"]],
     checks: [
       ["Telegram signature checked on the server", "The shop trusts only signed initData (HMAC, one hour), never what the browser says."],
       ["Prices checked again at checkout", "Prices and stock are verified once more inside one database transaction."],
@@ -124,7 +124,7 @@ export const strings = {
     ],
     checksHead: "Перевірено перед кожним релізом",
     checksLead: "З нотаток до релізів TEA BET, жовтень 2026. Офлайн-прогони на синтетичних даних.",
-    figures: [["1116", "smoke-перевірок"], ["669", "тестів pytest"], ["12", "браузерних сценаріїв"]],
+    figures: [["1116", "smoke-перевірок"], ["661", "тестів pytest"]],
     checks: [
       ["Підпис Telegram перевіряє сервер", "Магазин довіряє лише підписаним initData (HMAC, одна година), а не тому, що каже браузер."],
       ["Ціни перевіряються ще раз", "Під час оформлення ціни й залишки звіряються в одній транзакції бази даних."],

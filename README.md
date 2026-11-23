@@ -1,6 +1,6 @@
-# Yurii Fomenko — Web Developer
+# Yurii Fomenko — Python Backend Developer
 
-Telegram bots, Mini Apps, CRMs and online stores for small businesses. Open to remote roles and contract work.
+Python backend developer with 1.5+ years of commercial experience building FastAPI APIs and asynchronous Telegram commerce workflows.
 
 - [Portfolio (English)](https://yourkeey.github.io/) · [Українською](https://yourkeey.github.io/uk/)
 - [English CV](cv.html)
@@ -8,11 +8,11 @@ Telegram bots, Mini Apps, CRMs and online stores for small businesses. Open to r
 
 ## Project experience
 
-**TEA BET (n1kotea) — Telegram shop, CRM and Mini App.** Paid project for a tea shop owner. A React/TypeScript Mini App storefront opened from the bot was published in October 2026, with server-side Telegram initData verification and transactional checkout. Python, aiogram 3, FastAPI, SQLAdmin, SQLite, React, TypeScript and Vite; catalogue, cart, orders, stock, notifications and delivery-status tracking for manually entered waybill numbers.
+**TEA BET (n1kotea) — Telegram commerce platform.** Production FastAPI and aiogram Mini App backend with a shared cart and web admin. Migrated the database from SQLite to PostgreSQL, checked inventory in atomic transactions, and used Redis idempotency keys for order retries. The Nova Poshta integration tracks manually entered waybills and notifies customers of delivery updates.
 
-**Zimin Apiary — honey storefront.** Live store based on the owner's Instagram shop, accepting customer orders. Astro, TypeScript and CSS, with a Cloudflare order endpoint that validates the cart and sends order details to Telegram.
+**Kinshore Bay — booking and reception CRM.** Django and PostgreSQL hospitality reference implementation. A test with two database connections checks that only one concurrent confirmation succeeds for the last available apartment. [Source](https://github.com/yourkeey/kinshore-bay)
 
-AI coding agents are central to my implementation workflow.
+**Zimin Apiary — online store.** Astro and TypeScript storefront on Cloudflare Pages. The server-side checkout validates the cart, recalculates totals from the catalogue, and sends orders to the owner via Telegram.
 
 ## The live demo on the home page
 
