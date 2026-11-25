@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yurii Fomenko — Python Backend Developer CV</title>
   <meta name="description" content="Yurii Fomenko, Python Backend Developer. FastAPI, Django, PostgreSQL, and Telegram commerce.">
-  <style>*{box-sizing:border-box}body{margin:0;background:#eef1f3;color:#18212d;font-family:Arial,sans-serif;font-size:15px;line-height:1.52}.sheet{max-width:860px;margin:32px auto;padding:48px 54px;background:white;box-shadow:0 4px 30px #23344812}h1{font-size:36px;letter-spacing:-1px;line-height:1.1;margin:0 0 8px}h2{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;margin:26px 0 9px;color:#294d60}h3{font-size:17px;margin:18px 0 4px}.role{font-size:19px;margin:0 0 4px}.muted,.meta{color:#526171}.meta{font-size:13px}.contacts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0}p{margin:8px 0}ul{padding-left:19px;margin:8px 0}li{margin:6px 0}a{color:#17617b;text-decoration:underline;text-underline-offset:3px}a:focus-visible,button:focus-visible{outline:3px solid #137991;outline-offset:4px}.toolbar{max-width:860px;margin:24px auto 0;display:flex;flex-wrap:wrap;gap:20px;padding:0 20px}.status{color:#526171;font-size:13px}.project{break-inside:avoid}button{font:inherit;padding:9px 14px;background:white;border:1px solid #a8b7c2;border-radius:6px;cursor:pointer}@media(max-width:600px){.sheet{margin:16px 0;padding:28px 22px}h1{font-size:30px}.toolbar{margin-top:18px}}@media print{@page{size:A4;margin:12mm 14mm}.toolbar{display:none}body{background:white;font-size:9.8pt;line-height:1.4}p{margin:5px 0}h3{margin:12px 0 2px}.sheet{padding:0;margin:0;box-shadow:none;max-width:none}h1{font-size:25pt}h2{margin:13px 0 6px}h3{font-size:12pt}a{color:inherit}.meta,.status{font-size:9pt}li{margin:2px 0}}</style>
+  <style>*{box-sizing:border-box}body{margin:0;background:#eef1f3;color:#18212d;font-family:Arial,sans-serif;font-size:15px;line-height:1.52}.sheet{max-width:860px;margin:32px auto;padding:48px 54px;background:white;box-shadow:0 4px 30px #23344812}h1{font-size:36px;letter-spacing:-1px;line-height:1.1;margin:0 0 8px}h2{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;margin:26px 0 9px;color:#294d60}h3{font-size:17px;margin:18px 0 4px}.role{font-size:19px;margin:0 0 4px}.muted,.meta{color:#526171}.meta{font-size:13px}.contacts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0}p{margin:8px 0}ul{padding-left:19px;margin:8px 0}li{margin:6px 0}a{color:#17617b;text-decoration:underline;text-underline-offset:3px}a:focus-visible,button:focus-visible{outline:3px solid #137991;outline-offset:4px}.toolbar{max-width:860px;margin:24px auto 0;display:flex;flex-wrap:wrap;gap:20px;padding:0 20px}.status{color:#526171;font-size:13px}.project{break-inside:avoid}button{font:inherit;padding:9px 14px;background:white;border:1px solid #a8b7c2;border-radius:6px;cursor:pointer}@media(max-width:600px){.sheet{margin:16px 0;padding:28px 22px}h1{font-size:30px}.toolbar{margin-top:18px}}@media print{@page{size:A4;margin:9mm 12mm}.toolbar{display:none}body{background:white;font-size:8.5pt;line-height:1.26}p{margin:2.5px 0}.role{font-size:12.5pt;margin:0 0 2px}.contacts{margin:6px 0 0}h3{margin:6px 0 1.5px}.sheet{padding:0;margin:0;box-shadow:none;max-width:none}h1{font-size:20pt;margin:0 0 3px}h2{font-size:9pt;margin:8px 0 3px}h3{font-size:10.5pt}a{color:inherit}.meta,.status{font-size:8pt}ul{margin:3px 0}li{margin:1.5px 0}}</style>
 </head>
 <body>
   <nav class="toolbar" aria-label="CV actions">
@@ -40,10 +40,10 @@
       <h3>TEA BET · Telegram Commerce Platform</h3>
       <p class="status">Production Mini App · FastAPI, aiogram 3, PostgreSQL, SQLAlchemy, Redis, React, TypeScript, Docker, Sentry</p>
       <ul>
-        <li>Built a Telegram shop with 500+ products, a shared cart across the bot and Mini App, and a web admin for orders and inventory.</li>
-        <li>Verified Telegram <code>initData</code> with HMAC-SHA256 and migrated the production database from SQLite to PostgreSQL. Used atomic transactions for inventory checks, with Redis idempotency keys and rate limiting to protect checkout.</li>
-        <li>Integrated Nova Poshta delivery-status tracking for manually entered waybills and sent customer updates.</li>
-        <li>Set up Sentry, structured logging, GitHub Actions checks, Playwright scenarios, and release scripts for database backups and Docker rollback.</li>
+        <li>Built the production FastAPI backend for a 500+ SKU Telegram shop (launched July 9, live orders) with a shared bot/Mini App cart, HMAC-SHA256 <code>initData</code> auth, and order admin panel; migrated DB from SQLite to PostgreSQL.</li>
+        <li>Engineered idempotent checkout inside a single PostgreSQL transaction with Redis result caching, verified by a 4-way concurrent integration test including Redis-outage fallback.</li>
+        <li>Automated Nova Poshta delivery-status polling every 30 minutes via Celery Beat and Redis broker with bounded retries and backoff.</li>
+        <li>Configured Sentry, structured logging, GitHub Actions CI, Playwright checks, and Docker release scripts with DB backup/rollback.</li>
       </ul>
       <p><a href="https://yourkeey.github.io/#tea-project">Portfolio case and demo</a> · <a href="verification.html">Offline test report · 661 pytest tests and 1,116 smoke checks passed</a></p>
     </section>
@@ -70,7 +70,7 @@
 
     <h2>Technical skills</h2>
     <p><strong>Languages:</strong> Python, SQL, TypeScript, JavaScript</p>
-    <p><strong>Backend and data:</strong> FastAPI, Django, Pydantic, SQLAlchemy, PostgreSQL, SQLite, Redis, REST APIs, asyncio</p>
+    <p><strong>Backend and data:</strong> FastAPI, Django, Pydantic, SQLAlchemy, PostgreSQL, SQLite, Redis, Celery, Celery Beat, REST APIs, asyncio</p>
     <p><strong>Integrations:</strong> aiogram 3, Telegram Bot API and Mini Apps, Nova Poshta API</p>
     <p><strong>Testing and operations:</strong> pytest, Playwright, Docker Compose, GitHub Actions, Git, Ubuntu, systemd, Nginx, Caddy, Sentry</p>
     <p><strong>Frontend:</strong> React, Astro, Vite</p>
